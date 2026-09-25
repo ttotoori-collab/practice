@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>손글씨 숫자 인식기</title>
+<meta name="description" content="마우스나 손가락으로 쓴 숫자를 브라우저에서 바로 인식합니다. 외부 라이브러리 없이 순수 자바스크립트로 추론합니다.">
+<link rel="stylesheet" href="스타일.css">
+</head>
+<body>
+
+<header class="머리말">
+  <h1>손글씨 숫자 인식기</h1>
+  <p class="설명">
+    아래 칸에 숫자를 하나 써 보세요. 학습된 CNN 이 브라우저 안에서 바로 판단합니다.
+    서버로 그림을 보내지 않습니다.
+  </p>
+</header>
+
+<main class="본문">
+
+  <section class="그림판칸" aria-labelledby="그림판제목">
+    <h2 id="그림판제목">여기에 숫자를 써 보세요 (0~9)</h2>
+    <canvas id="그림판" class="그림판" aria-label="숫자를 쓰는 그림판"></canvas>
+    <div class="버튼줄">
+      <button type="button" id="인식버튼" class="버튼 강조">인식하기</button>
+      <button type="button" id="지우기버튼" class="버튼">지우기</button>
+    </div>
+    <p class="도움말">붓을 떼면 자동으로 인식합니다.</p>
+  </section>
+
+  <section class="결과칸" aria-labelledby="결과제목">
+    <h2 id="결과제목">인식 결과</h2>
+    <p id="결과숫자" class="결과숫자" aria-live="polite">?</p>
+    <p id="확신도" class="확신도">모델을 불러오는 중입니다…</p>
+    <div id="확률표" class="확률표"></div>
+  </section>
+
+</main>
+
+<p id="오류" class="오류" role="alert" hidden></p>
+
+<footer class="꼬리말">
+  <p>
+    학습 데이터는 MNIST, 모델은 합성곱 2층 + 전결합 2층입니다.
+    추론은 외부 라이브러리 없이 순수 자바스크립트로 수행합니다.
+  </p>
+  <p>
+    같은 모델로 동작하는 Windows 데스크톱 버전이 저장소의 <code>desktop_version/</code> 에 있습니다.
+  </p>
+</footer>
+
+<script type="module" src="js/앱.js"></script>
+</body>
+</html>

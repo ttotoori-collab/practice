@@ -7,5 +7,6 @@
 
 # 이진 파일
 *.pt binary
+*.bin binary
 *.ico binary
 *.png binary

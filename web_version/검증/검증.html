@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>웹 추론 경로 검증</title>
+<style>
+  body {
+    margin: 0; padding: 24px 16px 48px;
+    font-family: "Malgun Gothic", "맑은 고딕", system-ui, sans-serif;
+    background: #f4f4f4; color: #1f2933; line-height: 1.6;
+  }
+  .틀 { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 1.4rem; margin: 0 0 6px; }
+  .설명 { color: #555; font-size: 0.92rem; margin: 0 0 20px; }
+  .점수 {
+    padding: 16px; border-radius: 10px; background: #fff;
+    border: 1px solid #d6d6d6; margin-bottom: 16px;
+  }
+  .큰숫자 { font-size: 2.4rem; font-weight: 700; line-height: 1.2; }
+  .합격 { color: #157347; }
+  .불합격 { color: #b02a1a; }
+  .기다림 { color: #555; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.88rem; background: #fff; }
+  th, td { padding: 6px 8px; border: 1px solid #e0e0e0; text-align: left; }
+  th { background: #efefef; }
+  canvas { image-rendering: pixelated; border: 1px solid #ccc; vertical-align: middle; }
+  code { background: #e8e8e8; padding: 1px 4px; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="틀">
+
+<h1>웹 추론 경로 검증</h1>
+<p class="설명">
+  MNIST 평가 이미지 200장을 <strong>웹 버전의 전처리·추론 경로에 그대로</strong> 통과시켜
+  정확도를 잽니다. 데스크톱 버전의 검증 절차와 같게, 28×28 원본을 280×280 으로 확대한 뒤
+  그림판에서 그린 그림처럼 다룹니다.
+  합격 기준은 <strong>190/200 이상</strong>입니다.
+</p>
+
+<div class="점수">
+  <div id="점수" class="큰숫자 기다림">측정 중…</div>
+  <div id="상세"></div>
+</div>
+
+<div id="틀린것"></div>
+
+</div>
+
+<script type="module">
+/*
+ * 일부러 앱과 같은 모듈을 그대로 불러다 쓴다. 검증용으로 따로 구현하면
+ * 실제 앱이 쓰는 경로를 검증하지 못한다.
+ */
+import { 가중치_불러오기 } from "../js/가중치.js";
+import { 추론 } from "../js/신경망.js";
+import { 전처리, 란초스크기변경 } from "../js/전처리.js";
+
+const 점수칸 = document.getElementById("점수");
+const 상세칸 = document.getElementById("상세");
+const 틀린칸 = document.getElementById("틀린것");
+
+const 합격기준 = 190;
+
+/** 28x28 흑백 픽셀을 캔버스에 그려 눈으로 확인할 수 있게 한다. */
+function 미리보기(픽셀, 크기, 배율) {
+  const 캔버스 = document.createElement("canvas");
+  캔버스.width = 크기 * 배율;
+  캔버스.height = 크기 * 배율;
+  const 맥락 = 캔버스.getContext("2d");
+  const 자료 = 맥락.createImageData(크기, 크기);
+  for (let 색인 = 0; 색인 < 픽셀.length; 색인 += 1) {
+    const 값 = 픽셀[색인];
+    자료.data[색인 * 4] = 값;
+    자료.data[색인 * 4 + 1] = 값;
+    자료.data[색인 * 4 + 2] = 값;
+    자료.data[색인 * 4 + 3] = 255;
+  }
+  const 임시 = document.createElement("canvas");
+  임시.width = 크기; 임시.height = 크기;
+  임시.getContext("2d").putImageData(자료, 0, 0);
+  맥락.imageSmoothingEnabled = false;
+  맥락.drawImage(임시, 0, 0, 크기 * 배율, 크기 * 배율);
+  return 캔버스;
+}
+
+async function 검증() {
+  const 가중치 = await 가중치_불러오기("../모델");
+
+  const 응답 = await fetch("평가데이터.bin");
+  if (!응답.ok) {
+    throw new Error(
+      `평가데이터.bin 을 받지 못했습니다 (${응답.status}). ` +
+      "도구/평가데이터_만들기.py 를 먼저 실행해 주세요."
+    );
+  }
+  const 버퍼 = await 응답.arrayBuffer();
+  const 개수 = new DataView(버퍼).getUint32(0, true);
+  const 라벨들 = new Uint8Array(버퍼, 4, 개수);
+  const 이미지밑 = 4 + 개수;
+
+  let 맞힘 = 0;
+  const 틀린것 = [];
+  const 시작시각 = performance.now();
+
+  for (let 번호 = 0; 번호 < 개수; 번호 += 1) {
+    const 원본 = new Uint8Array(버퍼, 이미지밑 + 번호 * 784, 784);
+    const 확대 = 란초스크기변경(원본, 28, 28, 280, 280);
+    const 결과 = 전처리(확대, 280, 280);
+    if (결과 === null) {
+      틀린것.push({ 번호, 정답: 라벨들[번호], 예측: "빈그림", 확신도: 0, 이십팔: null });
+      continue;
+    }
+    const 확률 = 추론(결과.텐서, 가중치);
+    let 예측 = 0;
+    for (let 숫자 = 1; 숫자 < 10; 숫자 += 1) if (확률[숫자] > 확률[예측]) 예측 = 숫자;
+
+    if (예측 === 라벨들[번호]) {
+      맞힘 += 1;
+    } else {
+      틀린것.push({
+        번호, 정답: 라벨들[번호], 예측,
+        확신도: 확률[예측] * 100, 이십팔: 결과.이십팔,
+      });
+    }
+  }
+
+  const 걸린시간 = performance.now() - 시작시각;
+  const 합격 = 맞힘 >= 합격기준;
+
+  점수칸.className = `큰숫자 ${합격 ? "합격" : "불합격"}`;
+  점수칸.textContent = `${맞힘} / ${개수}  ${합격 ? "합격" : "불합격"}`;
+  상세칸.innerHTML =
+    `합격 기준 ${합격기준}/${개수} 이상 · ` +
+    `정확도 ${((맞힘 / 개수) * 100).toFixed(1)}% · ` +
+    `한 장당 ${(걸린시간 / 개수).toFixed(1)}ms ` +
+    `(확대 + 전처리 + 추론 전체)`;
+
+  if (틀린것.length === 0) {
+    틀린칸.innerHTML = "<p>틀린 것이 없습니다.</p>";
+    return;
+  }
+
+  const 표 = document.createElement("table");
+  표.innerHTML =
+    "<thead><tr><th>번호</th><th>정답</th><th>예측</th><th>확신도</th>" +
+    "<th>모델이 본 28×28</th></tr></thead>";
+  const 몸통 = document.createElement("tbody");
+  for (const 하나 of 틀린것) {
+    const 줄 = document.createElement("tr");
+    줄.innerHTML =
+      `<td>${하나.번호}</td><td>${하나.정답}</td><td>${하나.예측}</td>` +
+      `<td>${하나.확신도.toFixed(1)}%</td>`;
+    const 칸 = document.createElement("td");
+    if (하나.이십팔) 칸.appendChild(미리보기(하나.이십팔, 28, 3));
+    줄.appendChild(칸);
+    몸통.appendChild(줄);
+  }
+  표.appendChild(몸통);
+  틀린칸.innerHTML = `<h2 style="font-size:1rem">틀린 ${틀린것.length}개</h2>`;
+  틀린칸.appendChild(표);
+}
+
+검증().catch((오류) => {
+  점수칸.className = "큰숫자 불합격";
+  점수칸.textContent = "검증 실패";
+  상세칸.textContent = 오류.message;
+});
+</script>
+</body>
+</html>
