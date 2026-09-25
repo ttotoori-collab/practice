@@ -1,0 +1,11 @@
+# 배치 파일은 CRLF 여야 한다. LF 로 받으면 cmd 가 명령을 제대로 읽지 못한다.
+*.bat text eol=crlf
+
+# PowerShell 스크립트는 UTF-8 + BOM 이 필수다. (Windows PowerShell 5.1 대응)
+# 바이트를 그대로 보존하도록 이진 파일로 다룬다.
+*.ps1 -text
+
+# 이진 파일
+*.pt binary
+*.ico binary
+*.png binary
