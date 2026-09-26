@@ -29,6 +29,22 @@ body {
   line-height: 1.6;
 }
 
+/*
+ * 화면 맨 위 알림 띠.
+ * body 의 좌우·위 여백을 음수 margin 으로 상쇄해 화면 폭을 꽉 채운다.
+ */
+.연습알림 {
+  margin: -24px -16px 22px;
+  padding: 14px 16px;
+  background: #ffe066;
+  border-bottom: 2px solid #f0b400;
+  color: #4a3500;
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
 .머리말 {
   max-width: 640px;
   margin: 0 auto 24px;
