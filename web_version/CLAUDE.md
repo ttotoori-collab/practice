@@ -101,6 +101,7 @@ PIL 이미지에 이중으로 그렸지만, 웹은 `getImageData` 로 읽을 수
 ## 배포
 
 `.github/workflows/pages.yml` 이 `web_version/` 을 GitHub Pages 로 올린다.
+배포된 주소는 <https://ttotoori-collab.github.io/practice/> 다.
 빌드 단계가 없어서 이 폴더의 파일이 그대로 사이트가 된다.
 
 경로는 전부 상대 경로다. `사용자이름.github.io/저장소이름/` 같은 하위 경로에서도

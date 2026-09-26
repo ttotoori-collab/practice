@@ -5,6 +5,8 @@
 
 그림은 서버로 가지 않습니다. 모든 계산이 브라우저 안에서 끝납니다.
 
+**바로 써 보기 → <https://ttotoori-collab.github.io/practice/>**
+
 ## 실행
 
 `file://` 로 HTML 을 직접 열면 `fetch` 가 막혀 모델을 읽지 못합니다.

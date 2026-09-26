@@ -5,6 +5,8 @@
 
 MNIST 평가 정확도는 **99.07%** 이고, 두 버전 모두 앞 200장 기준 **199/200** 을 맞힙니다.
 
+**웹 버전은 설치 없이 바로 써 볼 수 있습니다 → <https://ttotoori-collab.github.io/practice/>**
+
 ## 어느 쪽을 쓸까
 
 | | [웹 버전](web_version/) | [데스크톱 버전](desktop_version/) |
