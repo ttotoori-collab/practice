@@ -1,9 +1,12 @@
-# CLAUDE.md
+# CLAUDE.md (데스크톱 버전)
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 MNIST CNN을 학습시키고, tkinter 그림판에 마우스로 쓴 숫자를 인식하는 Windows 데스크톱 앱.
-git 저장소가 아니며 테스트 스위트, 린터, 패키지 매니페스트가 없다.
+테스트 스위트, 린터, 패키지 매니페스트가 없다.
+
+두 버전 공통 규약(한글 식별자, 두 버전이 맞춰야 하는 값, 정확도 기준, 인코딩 표)은
+[`../CLAUDE.md`](../CLAUDE.md) 를 본다. 여기는 데스크톱 버전에만 해당하는 것만 적는다.
 
 ## 명령어
 
@@ -72,11 +75,23 @@ $내용 = [System.IO.File]::ReadAllText($경로, (New-Object System.Text.UTF8Enc
 여러 파일에 같은 값이 흩어져 있고, 어긋나면 조용히 오작동한다.
 
 - **정규화 상수** `평균=0.1307`, `표준편차=0.3081` — `train.py` 와 `app.py` 양쪽에 있다.
-  다르면 학습은 잘 되는데 앱 인식률만 망가진다.
+  다르면 학습은 잘 되는데 앱 인식률만 망가진다. 웹 쪽은 `../web_version/js/전처리.js` 에 같은 값이 있다.
 - **앱 식별자** `DSMP.MNIST.HandwritingRecognizer` — `app.py` 의 `앱식별자` 와
   `바로가기_만들기.ps1` 의 `$앱식별자`. 다르면 작업 표시줄 고정이 동작하지 않는다.
 - **`model.py` 의 모델 구조** — `train.py` 와 `app.py` 가 공유한다.
   구조를 바꾸면 기존 `mnist_cnn.pt` 를 못 읽으므로 반드시 재학습해야 한다.
+  웹 쪽은 `../web_version/js/신경망.js` 와 `../web_version/js/가중치.js` 의 `기대하는모양` 이 같은 구조를 가정한다.
+- **캔버스 한 변 280, 붓 굵기 22** — `app.py` 의 `캔버스크기`, `펜굵기`.
+  웹 쪽은 `../web_version/js/그림판.js` 에 같은 이름, 같은 값으로 있다.
+
+**재학습했으면 웹 가중치도 다시 내보낼 것.** `mnist_cnn.pt` 를 새로 만들었으면
+`python ../web_version/도구/가중치_내보내기.py` 를 실행해 `web_version/모델/` 을 갱신해야
+한다. 잊으면 데스크톱과 웹이 서로 다른 모델로 예측하게 된다. 가중치는 이 폴더에서
+웹 쪽으로만 흐르고, 반대 방향은 없다.
+
+**전처리를 고치면 양쪽을 함께 고쳐야 한다.** `app.py` 의 `전처리()` 를 바꾸면
+`../web_version/js/전처리.js` 의 `전처리()` 도 같이 고쳐야 두 버전의 인식률이 어긋나지
+않는다. 6단계는 뿌리 [`../CLAUDE.md`](../CLAUDE.md) 에 정리되어 있다.
 
 ## 구조상 알아 둘 점
 
@@ -89,6 +104,10 @@ $내용 = [System.IO.File]::ReadAllText($경로, (New-Object System.Text.UTF8Enc
 동시에 그린다. tkinter Canvas는 픽셀을 되읽을 수 없기 때문이다. 그리기 관련 코드를
 고칠 때 두 쪽 모두 갱신해야 한다.
 
+이 이중 그리기는 tkinter Canvas의 한계 때문에 생긴 **데스크톱만의 사정**이다.
+웹 버전(`../web_version/js/그림판.js`)은 `getImageData()` 로 캔버스 픽셀을 직접
+되읽을 수 있어 캔버스 하나로 화면과 인식을 모두 처리한다. 이 구조를 웹에 옮기지 않는다.
+
 **`train.py` 는 평가 정확도가 최고일 때만 저장한다.** 마지막 에폭 가중치가 아니다.
 
 **실행 경로:** 바탕화면 `.lnk` → `pythonw.exe`(콘솔 없음) → `app.py`.
@@ -96,6 +115,11 @@ $내용 = [System.IO.File]::ReadAllText($경로, (New-Object System.Text.UTF8Enc
 쓴다. AppUserModelID를 심어야 작업 표시줄 고정이 되는데 `WScript.Shell` 로는 불가능해서다.
 또 `C:\...\Microsoft\WindowsApps\` 의 Microsoft Store 별칭 스텁(0바이트)을 걸러내고
 `py -0p` 가 알려주는 실제 설치 경로를 우선한다.
+
+**`손글씨앱 실행.bat` 과 `바로가기_만들기.ps1` 은 자기 위치를 기준으로 동작한다**
+(둘 다 스크립트 자신의 경로에서 상대적으로 `app.py` 를 찾는다). 그래서 `desktop_version`
+폴더를 통째로 다른 위치로 옮겨도 이 둘은 그대로 동작한다. 다만 **`.lnk` 바로가기는
+절대 경로를 담고 있으므로** 폴더를 옮기면 `바로가기_만들기.ps1` 을 다시 실행해 새로 만들어야 한다.
 
 ## 함부로 하지 말 것
 

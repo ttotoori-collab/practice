@@ -1,0 +1,53 @@
+# web_version/ 폴더를 GitHub Pages 에 그대로 올리는 워크플로.
+#
+# GitHub Pages 는 "저장소 뿌리" 또는 "/docs" 만 소스로 지정할 수 있어서,
+# web_version/ 을 그대로 쓰려면 이렇게 Actions 로 올려야 한다.
+#
+# 처음 한 번은 저장소 설정에서 켜 주어야 한다:
+#   Settings → Pages → Build and deployment → Source 를 "GitHub Actions" 로
+#
+# 참고: job 과 step 의 id 는 GitHub 규칙상 영문·숫자·_·- 만 쓸 수 있어서
+# 이 파일에서는 한글 식별자를 쓰지 못한다. 사람이 읽는 name 만 한글로 적는다.
+
+name: 웹 버전 배포
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web_version/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 배포가 겹치지 않게 한 번에 하나만 돌린다.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: web_version 을 Pages 로 배포
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 저장소 내려받기
+        uses: actions/checkout@v4
+
+      - name: Pages 설정 읽기
+        uses: actions/configure-pages@v5
+
+      - name: web_version 폴더를 아티팩트로 올리기
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web_version
+
+      - name: 배포
+        id: deployment
+        uses: actions/deploy-pages@v4
