@@ -1,0 +1,191 @@
+:root {
+  --배경: #f4f4f4;
+  --판: #ffffff;
+  --강조: #1a56db;
+  --글자: #1f2933;
+  --보조글자: #555555;
+  --옅은글자: #777777;
+  --막대바탕: #e2e2e2;
+  --막대보조: #9aa5b1;
+  --테두리: #d6d6d6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 24px 16px 40px;
+  background: var(--배경);
+  color: var(--글자);
+  font-family: "Malgun Gothic", "맑은 고딕", system-ui, -apple-system, sans-serif;
+}
+
+.머리말 {
+  max-width: 720px;
+  margin: 0 auto 24px;
+  text-align: center;
+}
+
+.머리말 h1 {
+  margin: 0 0 8px;
+  font-size: 1.6em;
+}
+
+.머리말 p {
+  margin: 0;
+  color: var(--보조글자);
+}
+
+/* 넓은 화면에서는 나란히, 좁으면 자동으로 아래로 쌓인다. */
+.본문 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.그림판칸 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  background: var(--판);
+  border: 1px solid var(--테두리);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+/*
+ * 캔버스의 내부 해상도는 항상 280x280 이고(그림판.js 가 지정한다),
+ * 여기서는 보이는 크기만 조절한다.
+ */
+.그림판 {
+  display: block;
+  width: 280px;
+  max-width: min(280px, calc(100vw - 80px));
+  aspect-ratio: 1 / 1;
+  height: auto;
+  background: #000000;
+  border: 1px solid #888888;
+  border-radius: 4px;
+  cursor: crosshair;
+  touch-action: none;          /* 손가락으로 그릴 때 화면이 스크롤되지 않게 한다 */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.버튼줄 {
+  display: flex;
+  gap: 8px;
+}
+
+.버튼줄 button {
+  padding: 8px 16px;
+  font-size: 1em;
+  font-family: inherit;
+  color: #ffffff;
+  background: var(--강조);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.버튼줄 button:hover {
+  filter: brightness(1.1);
+}
+
+.버튼줄 button:disabled {
+  background: var(--막대보조);
+  cursor: not-allowed;
+}
+
+.안내글 {
+  margin: 0;
+  font-size: 0.85em;
+  color: var(--옅은글자);
+  text-align: center;
+}
+
+.결과칸 {
+  flex: 1 1 280px;
+  min-width: 240px;
+  background: var(--판);
+  border: 1px solid var(--테두리);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+
+.결과숫자 {
+  margin: 0;
+  font-size: 4em;
+  font-weight: bold;
+  line-height: 1;
+  color: var(--강조);
+}
+
+.확신도 {
+  margin: 8px 0 16px;
+  color: var(--보조글자);
+}
+
+.확률표 {
+  display: grid;
+  grid-template-columns: 1.5em 1fr 3.6em;
+  align-items: center;
+  gap: 4px 8px;
+  text-align: left;
+}
+
+.확률숫자 {
+  font-weight: bold;
+  text-align: center;
+}
+
+.막대바탕 {
+  background: var(--막대바탕);
+  border-radius: 4px;
+  overflow: hidden;
+  height: 0.9em;
+}
+
+.막대 {
+  width: 0;
+  height: 100%;
+  background: var(--막대보조);
+  transition: width 0.12s ease-out;
+}
+
+.막대.최고 {
+  background: var(--강조);
+}
+
+.확률값 {
+  font-variant-numeric: tabular-nums;
+  color: var(--보조글자);
+  text-align: right;
+}
+
+.오류 {
+  max-width: 720px;
+  margin: 16px auto 0;
+  padding: 12px 16px;
+  background: #fdecea;
+  color: #611a15;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+  white-space: pre-line;
+}
+
+.꼬리말 {
+  max-width: 720px;
+  margin: 32px auto 0;
+  color: var(--옅은글자);
+  font-size: 0.85em;
+  text-align: center;
+}
