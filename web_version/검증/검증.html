@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>웹 추론 정확도 검증</title>
+<style>
+  :root {
+    --배경: #f4f4f4;
+    --판: #ffffff;
+    --글자: #1f2933;
+    --보조글자: #555555;
+    --테두리: #d6d6d6;
+    --합격색: #157347;
+    --불합격색: #b02a1a;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 24px 16px 40px;
+    background: var(--배경);
+    color: var(--글자);
+    font-family: "Malgun Gothic", "맑은 고딕", system-ui, -apple-system, sans-serif;
+  }
+
+  .머리말 {
+    max-width: 720px;
+    margin: 0 auto 24px;
+    text-align: center;
+  }
+
+  .머리말 h1 {
+    margin: 0 0 8px;
+    font-size: 1.5em;
+  }
+
+  .머리말 p {
+    margin: 0;
+    color: var(--보조글자);
+  }
+
+  .가운데정렬 {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+    color: var(--보조글자);
+  }
+
+  .점수칸 {
+    max-width: 720px;
+    margin: 0 auto 24px;
+    padding: 24px;
+    background: var(--판);
+    border: 1px solid var(--테두리);
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .점수텍스트 {
+    margin: 0;
+    font-size: 3em;
+    font-weight: bold;
+    line-height: 1.1;
+  }
+
+  .점수설명 {
+    margin: 8px 0 0;
+    color: var(--보조글자);
+  }
+
+  .소요시간 {
+    margin: 4px 0 0;
+    color: var(--보조글자);
+    font-size: 0.9em;
+  }
+
+  .틀린표영역 {
+    max-width: 960px;
+    margin: 0 auto;
+    background: var(--판);
+    border: 1px solid var(--테두리);
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+  }
+
+  .틀린표영역 h2 {
+    margin: 0 0 12px;
+    font-size: 1.1em;
+    text-align: center;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th, td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--테두리);
+    text-align: center;
+  }
+
+  th {
+    color: var(--보조글자);
+    font-weight: normal;
+  }
+
+  td canvas {
+    display: block;
+    margin: 0 auto;
+    image-rendering: pixelated;
+    background: #000000;
+    border: 1px solid #888888;
+  }
+
+  .오류 {
+    max-width: 720px;
+    margin: 16px auto 0;
+    padding: 12px 16px;
+    background: #fdecea;
+    color: #611a15;
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    white-space: pre-line;
+  }
+</style>
+</head>
+<body>
+  <header class="머리말">
+    <h1>웹 추론 정확도 검증</h1>
+    <p>MNIST 평가 앞 200장을 이 브라우저의 신경망.js 로 직접 추론해 정확도 게이트를 확인합니다.</p>
+  </header>
+
+  <p id="상태" class="가운데정렬">평가 중입니다…</p>
+
+  <section id="점수칸" class="점수칸" hidden>
+    <p id="점수텍스트" class="점수텍스트"></p>
+    <p id="점수설명" class="점수설명"></p>
+    <p id="소요시간" class="소요시간"></p>
+  </section>
+
+  <section id="틀린표영역" class="틀린표영역" hidden>
+    <h2>틀린 항목</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>번호</th>
+          <th>정답</th>
+          <th>예측</th>
+          <th>확신도</th>
+          <th>모델이 본 것 (28×28)</th>
+        </tr>
+      </thead>
+      <tbody id="틀린표본문"></tbody>
+    </table>
+  </section>
+
+  <p id="오류" class="오류" role="alert" hidden></p>
+
+  <script type="module">
+    import { 가중치_불러오기 } from "../js/가중치.js";
+    import { 추론 } from "../js/신경망.js";
+    import { 전처리, 란초스크기변경 } from "../js/전처리.js";
+
+    const 합격기준 = 190;
+
+    const 요소 = {
+      상태: document.getElementById("상태"),
+      점수칸: document.getElementById("점수칸"),
+      점수텍스트: document.getElementById("점수텍스트"),
+      점수설명: document.getElementById("점수설명"),
+      소요시간: document.getElementById("소요시간"),
+      틀린표영역: document.getElementById("틀린표영역"),
+      틀린표본문: document.getElementById("틀린표본문"),
+      오류: document.getElementById("오류"),
+    };
+
+    function 오류보이기(내용) {
+      요소.오류.textContent = 내용;
+      요소.오류.hidden = false;
+    }
+
+    /** 28x28 흑백 픽셀(이십팔)을 캔버스에 그린 뒤 3배로 확대해 돌려준다. */
+    function 미리보기_캔버스(이십팔) {
+      const 원캔버스 = document.createElement("canvas");
+      원캔버스.width = 28;
+      원캔버스.height = 28;
+      const 원맥락 = 원캔버스.getContext("2d");
+      const 그림자료 = 원맥락.createImageData(28, 28);
+      for (let 색인 = 0; 색인 < 28 * 28; 색인 += 1) {
+        const 값 = 이십팔[색인];
+        그림자료.data[색인 * 4] = 값;
+        그림자료.data[색인 * 4 + 1] = 값;
+        그림자료.data[색인 * 4 + 2] = 값;
+        그림자료.data[색인 * 4 + 3] = 255;
+      }
+      원맥락.putImageData(그림자료, 0, 0);
+
+      const 배율 = 3;
+      const 캔버스 = document.createElement("canvas");
+      캔버스.width = 28 * 배율;
+      캔버스.height = 28 * 배율;
+      const 맥락 = 캔버스.getContext("2d");
+      맥락.imageSmoothingEnabled = false;
+      맥락.drawImage(원캔버스, 0, 0, 28 * 배율, 28 * 배율);
+      return 캔버스;
+    }
+
+    /** 틀린 항목 하나를 표의 한 줄(tr)로 만든다. */
+    function 틀린표_한줄(항목) {
+      const 줄 = document.createElement("tr");
+
+      const 번호칸 = document.createElement("td");
+      번호칸.textContent = String(항목.번호);
+
+      const 정답칸 = document.createElement("td");
+      정답칸.textContent = String(항목.정답);
+
+      const 예측칸 = document.createElement("td");
+      예측칸.textContent = String(항목.예측);
+
+      const 확신도칸 = document.createElement("td");
+      확신도칸.textContent = `${항목.확신도.toFixed(1)}%`;
+
+      const 미리보기칸 = document.createElement("td");
+      if (항목.이십팔 !== null) {
+        미리보기칸.appendChild(미리보기_캔버스(항목.이십팔));
+      } else {
+        미리보기칸.textContent = "—";
+      }
+
+      줄.append(번호칸, 정답칸, 예측칸, 확신도칸, 미리보기칸);
+      return 줄;
+    }
+
+    async function 검증() {
+      const 가중치 = await 가중치_불러오기("../모델");
+
+      const 응답 = await fetch("평가데이터.bin");
+      if (!응답.ok) {
+        throw new Error(
+          `평가데이터.bin 을 받지 못했습니다 (${응답.status}). ` +
+          "도구/평가데이터_만들기.py 를 먼저 실행해 주세요."
+        );
+      }
+      const 버퍼 = await 응답.arrayBuffer();
+      const 개수 = new DataView(버퍼).getUint32(0, true);
+      const 라벨들 = new Uint8Array(버퍼, 4, 개수);
+      const 이미지밑 = 4 + 개수;
+
+      let 맞힘 = 0;
+      const 틀린것 = [];
+      const 시작시각 = performance.now();
+
+      for (let 번호 = 0; 번호 < 개수; 번호 += 1) {
+        const 원본 = new Uint8Array(버퍼, 이미지밑 + 번호 * 784, 784);
+        const 결과 = 전처리(란초스크기변경(원본, 28, 28, 280, 280), 280, 280);
+        if (결과 === null) {
+          틀린것.push({ 번호, 정답: 라벨들[번호], 예측: "빈그림", 확신도: 0, 이십팔: null });
+          continue;
+        }
+        const 확률 = 추론(결과.텐서, 가중치);
+        let 예측 = 0;
+        for (let 숫자 = 1; 숫자 < 10; 숫자 += 1) if (확률[숫자] > 확률[예측]) 예측 = 숫자;
+
+        if (예측 === 라벨들[번호]) 맞힘 += 1;
+        else 틀린것.push({
+          번호, 정답: 라벨들[번호], 예측,
+          확신도: 확률[예측] * 100, 이십팔: 결과.이십팔,
+        });
+      }
+
+      const 걸린시간 = performance.now() - 시작시각;
+      const 합격 = 맞힘 >= 합격기준;
+      // 점수, 정확도, 한 장당 소요 시간, 그리고 틀린 것들의 표를 화면에 그린다.
+      // 틀린 항목은 결과.이십팔 (28x28 흑백) 을 캔버스로 확대해 함께 보여 준다.
+
+      요소.상태.hidden = true;
+
+      요소.점수텍스트.textContent = `${맞힘} / ${개수} ${합격 ? "합격" : "불합격"}`;
+      요소.점수텍스트.style.color = 합격 ? "#157347" : "#b02a1a";
+
+      const 정확도 = (맞힘 / 개수 * 100).toFixed(1);
+      요소.점수설명.textContent = `합격 기준 ${합격기준}/${개수} 이상 · 정확도 ${정확도}%`;
+      요소.소요시간.textContent =
+        `총 ${(걸린시간 / 1000).toFixed(2)}초 · 장당 ${(걸린시간 / 개수).toFixed(2)}ms`;
+
+      요소.점수칸.hidden = false;
+
+      if (틀린것.length > 0) {
+        for (const 항목 of 틀린것) {
+          요소.틀린표본문.appendChild(틀린표_한줄(항목));
+        }
+        요소.틀린표영역.hidden = false;
+      }
+    }
+
+    검증().catch((오류) => {
+      요소.상태.hidden = true;
+      오류보이기(`검증 중 오류가 일어났습니다.\n${오류.message}`);
+    });
+  </script>
+</body>
+</html>
