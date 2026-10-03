@@ -2,6 +2,7 @@
  * 화면 장식과 잔재미를 맡는 모듈.
  *   · 쪽지 말풍선 띄우기
  *   · 제목 표시줄의 최소화·닫기 버튼 (옛날 창 흉내)
+ *   · 낮·밤 모드 갈아끼우기
  *   · 공부시간 보기 좋게 바꾸기
  */
 
@@ -44,6 +45,27 @@ export function 닫기장난달기(닫기버튼, 쪽지) {
     쪽지보이기(쪽지, 핀잔들[차례 % 핀잔들.length]);
     차례 += 1;
   });
+}
+
+/*
+ * 낮·밤 모드.
+ *
+ * <html> 에 "밤모드" 클래스를 붙였다 뗐다 하는 것이 전부다.
+ * 스타일.css 의 :root.밤모드 가 색 변수만 통째로 갈아끼우므로
+ * 여기서 색을 직접 건드릴 일은 없다.
+ */
+export function 테마입히기(이름, 버튼, 아이콘, 글) {
+  const 밤 = 이름 === "밤";
+
+  document.documentElement.classList.toggle("밤모드", 밤);
+  버튼.setAttribute("aria-pressed", String(밤));
+  버튼.title = 밤 ? "낮 모드로 돌아가기" : "밤 모드";
+  아이콘.textContent = 밤 ? "☀️" : "🌙";
+  글.textContent = 밤 ? "낮 모드" : "밤 모드";
+
+  // 주소창·상태바 색도 맞춰 준다. 휴대폰에서 창 둘레만 하얗게 뜨는 것을 막는다.
+  const 테마색 = document.querySelector('meta[name="theme-color"]');
+  if (테마색) 테마색.setAttribute("content", 밤 ? "#1a1740" : "#dc6b9f");
 }
 
 /** 초를 05:53 처럼, 한 시간이 넘으면 1:05:53 처럼 바꾼다. */

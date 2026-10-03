@@ -11,26 +11,97 @@
  *
  * 모바일 화면(폭 360~460px)을 기준으로 짜고, 넓은 화면에서는 가운데로 모은다.
  * 손가락으로 누르는 버튼은 최소 48px 높이를 지킨다.
+ *
+ * 색은 전부 :root 의 변수로만 쓴다. 규칙 안에 색을 직접 적지 않는다.
+ * 밤 모드가 `:root.밤모드` 에서 변수만 갈아끼워 화면 전체를 바꾸기 때문이다.
+ * 새 색이 필요하면 변수를 하나 늘리고 밤 모드 쪽에도 짝을 적어 준다.
  */
 
 :root {
-  /* 색 */
-  --핑크: #ff8cc6;
-  --진핑크: #ff5fa2;
-  --더진핑크: #e0397f;
-  --연핑크: #ffd9ec;
-  --아주연핑크: #fff0f7;
-  --하늘: #8fd8ff;
-  --진하늘: #46b6ef;
-  --더진하늘: #1f90cc;
-  --연하늘: #e2f4ff;
-  --라벤더: #c9b6ff;
-  --진라벤더: #9c7bf0;
-  --더진라벤더: #7a56d6;
-  --흰판: #fffdfe;
-  --글자: #5a3550;
-  --보조글자: #a8749a;
-  --지브라검정: #3b2a35;
+  /*
+   * 낮 색. 눈이 부시지 않게 채도를 한 단계 낮춰 두었다.
+   * 더 쨍하게 만들고 싶더라도 --종이 는 흰색(#ffffff)으로 올리지 않는다.
+   * 가장 넓은 면이라 조금만 밝아져도 바로 눈이 부시다.
+   */
+  --핑크: #eb9cc2;
+  --진핑크: #dc6b9f;
+  --더진핑크: #bf4e82;
+  --연핑크: #f8e0ec;
+  --아주연핑크: #fdf3f7;
+  --하늘: #a7d7ee;
+  --진하늘: #58a9d0;
+  --더진하늘: #3b83aa;
+  --연하늘: #eaf4fa;
+  --라벤더: #c6b7e8;
+  --진라벤더: #917fcb;
+  --더진라벤더: #6f5da9;
+  --글자: #51384c;
+  --핑크글자: #bf4e82;      /* 분홍 글씨. 버튼 그림자용 --더진핑크 와 달리 바탕 대비를 지킨다 */
+  --하늘글자: #3b83aa;
+  --보조글자: #8e6b85;
+  --지브라검정: #4a3a44;
+  --지브라흰: #fdf6ee;
+
+  /* 넓은 면 */
+  --몸배경:
+    radial-gradient(circle at 12px 12px, rgba(255, 255, 255, .62) 4.5px, transparent 5.5px) 0 0 / 44px 44px,
+    radial-gradient(circle at 12px 12px, rgba(255, 255, 255, .34) 3px, transparent 4px) 22px 22px / 44px 44px,
+    linear-gradient(165deg, #cbe6f2 0%, #e3eff4 32%, #f7e2ec 72%, #eecfe1 100%);
+  --창바탕: #fffcf8;
+  --창테두리광: #ffffff;
+  --창그림자: 0 8px 0 rgba(220, 107, 159, .26), 0 16px 34px rgba(120, 60, 100, .26);
+  --종이: #fffbf5;                              /* 카드 안쪽 (살짝 크림색) */
+  --종이줄: rgba(120, 180, 215, .38);
+  --종이여백선: rgba(226, 140, 182, .5);
+  --말풍선바탕: #fffdfa;
+  --말풍선그림자: rgba(235, 156, 194, .35);
+
+  /* 창틀 */
+  --제목줄바탕: linear-gradient(180deg, #f3b2d2 0%, var(--핑크) 45%, var(--진핑크) 100%);
+  --제목줄글자: #ffffff;
+  --제목줄글자그림자: rgba(150, 50, 100, .5);
+  --제목줄광택: linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, 0));
+  --창버튼바탕: linear-gradient(180deg, #fff6fb 0%, #f7dcea 55%, #efb8d4 100%);
+  --창버튼글자: #9c4572;
+  --도구줄바탕: linear-gradient(180deg, var(--연하늘), var(--창바탕));
+  --도구버튼테두리: #ffffff;
+  --상태줄바탕: linear-gradient(180deg, var(--창바탕), var(--연핑크));
+  --상태줄글자: #9c5c84;
+  --꼬리말글자: #7c6076;
+
+  /* 카드 속 */
+  --한자색: #4a2c44;
+  --한자그림자: 2px 2px 0 var(--연핑크), 3px 3px 0 rgba(235, 156, 194, .4);
+  --훈음바탕: var(--아주연핑크);
+  --훈음글자: #b5497f;
+  --스프링바탕: linear-gradient(90deg, #ffffff 0%, #e6ebf5 40%, #aeb9cc 100%);
+  --스프링테두리: #b9c4d6;
+  --진행막대바탕: #fffdfa;
+
+  /* 젤리 버튼 */
+  --젤리광택: linear-gradient(180deg, rgba(255, 255, 255, .85), rgba(255, 255, 255, 0));
+  --젤리핑크바탕: linear-gradient(180deg, #f6b6d3 0%, #e585b4 48%, var(--진핑크) 100%);
+  --젤리하늘바탕: linear-gradient(180deg, #cfeaf7 0%, #7fc0e0 48%, var(--진하늘) 100%);
+  --젤리라벤더바탕: linear-gradient(180deg, #e3dbf6 0%, #ab9ade 48%, var(--진라벤더) 100%);
+  --젤리하양바탕: linear-gradient(180deg, #fffdfa 0%, #fdf0f6 48%, var(--연핑크) 100%);
+  --젤리하양글자: #ab4a7c;
+  --젤리하양아래: #efb8d4;
+  --토글끔바탕: linear-gradient(180deg, #fffdfa 0%, #f3eef2 55%, #e2dade 100%);
+  --토글끔글자: #9b8b96;
+  --토글끔아래: #cac0c7;
+  --토글못씀바탕: linear-gradient(180deg, #f8f6f7, #e9e5e7);
+  --토글못씀글자: #b8b1b6;
+  --토글못씀아래: #d9d3d7;
+
+  /* 알림 */
+  --반짝이빛: none;
+  --반짝이진하기: .85;
+
+  --쪽지바탕: #fff8e2;
+  --쪽지테두리: #efc055;
+  --오류바탕: #fdefef;
+  --오류테두리: #e88989;
+  --오류글자: #a93e3e;
 
   /* 글꼴 */
   --손글씨: "Jua", "Gaegu", "Malgun Gothic", "맑은 고딕", sans-serif;
@@ -40,14 +111,97 @@
   /* 지브라 무늬는 여러 곳에서 쓴다 */
   --지브라무늬:
     repeating-linear-gradient(74deg,
-      var(--지브라검정) 0 7px, #ffffff 7px 11px,
-      var(--지브라검정) 11px 15px, #ffffff 15px 24px);
+      var(--지브라검정) 0 7px, var(--지브라흰) 7px 11px,
+      var(--지브라검정) 11px 15px, var(--지브라흰) 15px 24px);
 
   /* 카드 테두리용. 테두리가 얇으니 줄무늬도 가늘게 한다. */
   --가는지브라무늬:
     repeating-linear-gradient(74deg,
-      var(--지브라검정) 0 4px, #ffffff 4px 6px,
-      var(--지브라검정) 6px 8px, #ffffff 8px 13px);
+      var(--지브라검정) 0 4px, var(--지브라흰) 4px 6px,
+      var(--지브라검정) 6px 8px, var(--지브라흰) 8px 13px);
+}
+
+/*
+ * 밤 모드. 변수만 갈아끼운다. 규칙은 하나도 다시 쓰지 않는다.
+ * 배경은 진한 남색~보라, 카드는 어두운 회색, 글씨는 연한 색이고
+ * 핑크·하늘색은 버튼과 테두리 같은 포인트에만 남는다.
+ * 물방울 무늬는 그대로 두되 작고 희미하게 만들어 밤하늘의 별처럼 보이게 한다.
+ */
+:root.밤모드 {
+  --핑크: #d87aa8;
+  --진핑크: #c75f92;
+  --더진핑크: #8f3f68;
+  --연핑크: #46324a;
+  --아주연핑크: #382a3e;
+  --하늘: #6fa9c9;
+  --진하늘: #4d8fb3;
+  --더진하늘: #2f6684;
+  --연하늘: #2b3647;
+  --라벤더: #9c8cd6;
+  --진라벤더: #7d6cc0;
+  --더진라벤더: #53458c;
+  --글자: #e9e1f0;
+  --핑크글자: #f3a9cd;
+  --하늘글자: #9ed3ef;
+  --보조글자: #a99cbd;
+  --지브라검정: #15112a;
+  --지브라흰: #b3a7cd;
+
+  --몸배경:
+    radial-gradient(circle at 12px 12px, rgba(255, 255, 255, .22) 2.4px, transparent 3.4px) 0 0 / 44px 44px,
+    radial-gradient(circle at 12px 12px, rgba(198, 216, 255, .13) 1.5px, transparent 2.5px) 22px 22px / 44px 44px,
+    linear-gradient(165deg, #121130 0%, #1a1740 35%, #281d4a 70%, #342152 100%);
+  --창바탕: #221d35;
+  --창테두리광: #3a3157;
+  --창그림자: 0 8px 0 rgba(10, 8, 24, .5), 0 16px 34px rgba(0, 0, 0, .5);
+  --종이: #34303c;                              /* 카드 안쪽 (어두운 회색) */
+  --종이줄: rgba(150, 190, 220, .14);
+  --종이여백선: rgba(216, 122, 168, .4);
+  --말풍선바탕: #3b3550;
+  --말풍선그림자: rgba(10, 8, 24, .45);
+
+  --제목줄바탕: linear-gradient(180deg, #5f3e68 0%, #4c3056 45%, #3a2444 100%);
+  --제목줄글자: #f6e6f0;
+  --제목줄글자그림자: rgba(10, 6, 20, .6);
+  --제목줄광택: linear-gradient(180deg, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0));
+  --창버튼바탕: linear-gradient(180deg, #5b4a6e 0%, #44375480 55%, #332a44 100%);
+  --창버튼글자: #efd7e6;
+  --도구줄바탕: linear-gradient(180deg, #272143, var(--창바탕));
+  --도구버튼테두리: #342c4e;
+  --상태줄바탕: linear-gradient(180deg, #2a2440, #211c33);
+  --상태줄글자: #dba6c6;
+  --꼬리말글자: #a294b8;
+
+  --한자색: #f3ebf8;
+  --한자그림자: 2px 2px 0 rgba(216, 122, 168, .35), 3px 3px 0 rgba(10, 8, 24, .35);
+  --훈음바탕: #40334a;
+  --훈음글자: #f0a8cd;
+  --스프링바탕: linear-gradient(90deg, #8d93a8 0%, #6e7488 40%, #4b4f60 100%);
+  --스프링테두리: #5b6074;
+  --진행막대바탕: #2c2742;
+
+  --젤리광택: linear-gradient(180deg, rgba(255, 255, 255, .4), rgba(255, 255, 255, 0));
+  --젤리핑크바탕: linear-gradient(180deg, #d98cb4 0%, #be6391 48%, #9c4570 100%);
+  --젤리하늘바탕: linear-gradient(180deg, #7fb6d4 0%, #4f8fb2 48%, #37708f 100%);
+  --젤리라벤더바탕: linear-gradient(180deg, #a996dd 0%, #8172c0 48%, #5d4e99 100%);
+  --젤리하양바탕: linear-gradient(180deg, #4a4160 0%, #3e3652 48%, #332c45 100%);
+  --젤리하양글자: #f0cfe2;
+  --젤리하양아래: #2a2439;
+  --토글끔바탕: linear-gradient(180deg, #45405c 0%, #3b3650 55%, #302b43 100%);
+  --토글끔글자: #a79ac0;
+  --토글끔아래: #272139;
+  --토글못씀바탕: linear-gradient(180deg, #332f45, #2b2739);
+  --토글못씀글자: #6d6481;
+  --토글못씀아래: #241f33;
+
+  --반짝이빛: 0 0 10px rgba(214, 198, 255, .85);
+  --반짝이진하기: 1;
+
+  --쪽지바탕: #4a3f2c;
+  --쪽지테두리: #b3903f;
+  --오류바탕: #452a30;
+  --오류테두리: #a35b5b;
+  --오류글자: #f3b9b9;
 }
 
 * { box-sizing: border-box; }
@@ -60,11 +214,8 @@ body {
   font-family: var(--손글씨);
   font-size: 17px;
   line-height: 1.55;
-  /* 물방울(폴카도트) 두 겹 + 하늘색~핑크 그라데이션 */
-  background:
-    radial-gradient(circle at 12px 12px, rgba(255, 255, 255, .8) 4.5px, transparent 5.5px) 0 0 / 44px 44px,
-    radial-gradient(circle at 12px 12px, rgba(255, 255, 255, .45) 3px, transparent 4px) 22px 22px / 44px 44px,
-    linear-gradient(165deg, #b8e6ff 0%, #d9f0ff 32%, #ffdcee 72%, #ffbfdf 100%);
+  /* 물방울(폴카도트) 두 겹 + 그라데이션. 밤 모드에서는 별이 뜬 밤하늘이 된다. */
+  background: var(--몸배경);
   background-attachment: fixed;
   -webkit-text-size-adjust: 100%;
 }
@@ -83,7 +234,8 @@ body {
   left: var(--왼쪽);
   top: var(--위);
   font-size: 1.5rem;
-  opacity: .85;
+  opacity: var(--반짝이진하기);
+  text-shadow: var(--반짝이빛);
   animation: 반짝반짝 3.6s ease-in-out infinite;
   animation-delay: var(--늦기);
 }
@@ -100,14 +252,11 @@ body {
   z-index: 1;
   max-width: 460px;
   margin: 0 auto;
-  background: var(--흰판);
+  background: var(--창바탕);
   border: 3px solid var(--핑크);
   border-radius: 20px;
   overflow: hidden;
-  box-shadow:
-    0 0 0 3px #ffffff,
-    0 8px 0 rgba(255, 95, 162, .3),
-    0 16px 34px rgba(120, 60, 100, .3);
+  box-shadow: 0 0 0 3px var(--창테두리광), var(--창그림자);
 }
 
 .제목줄 {
@@ -116,7 +265,7 @@ body {
   align-items: center;
   gap: 7px;
   padding: 9px 10px;
-  background: linear-gradient(180deg, #ffb3dd 0%, var(--핑크) 45%, var(--진핑크) 100%);
+  background: var(--제목줄바탕);
   border-bottom: 2px solid var(--더진핑크);
 }
 
@@ -127,7 +276,7 @@ body {
   left: 4px; right: 4px; top: 3px;
   height: 42%;
   border-radius: 10px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, .8), rgba(255, 255, 255, 0));
+  background: var(--제목줄광택);
   pointer-events: none;
 }
 
@@ -138,8 +287,8 @@ body {
   margin: 0;
   font-size: 1.12rem;
   font-weight: 400;
-  color: #ffffff;
-  text-shadow: 0 2px 2px rgba(170, 40, 110, .55);
+  color: var(--제목줄글자);
+  text-shadow: 0 2px 2px var(--제목줄글자그림자);
   letter-spacing: .01em;
 }
 
@@ -150,16 +299,16 @@ body {
   height: 26px;
   border: 2px solid var(--더진핑크);
   border-radius: 7px;
-  background: linear-gradient(180deg, #fff6fb 0%, #ffd4e9 55%, #ffb0d5 100%);
-  color: #a33068;
+  background: var(--창버튼바탕);
+  color: var(--창버튼글자);
   font-family: var(--손글씨);
   font-size: .85rem;
   line-height: 1;
   cursor: pointer;
-  box-shadow: inset 0 1px 0 #ffffff, 0 2px 0 rgba(170, 40, 110, .35);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), 0 2px 0 var(--더진핑크);
 }
 
-.창버튼:active { transform: translateY(2px); box-shadow: inset 0 1px 0 #ffffff; }
+.창버튼:active { transform: translateY(2px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55); }
 
 .지브라줄 {
   height: 13px;
@@ -173,7 +322,7 @@ body {
   display: flex;
   gap: 6px;
   padding: 7px 8px;
-  background: linear-gradient(180deg, var(--연하늘), #ffffff);
+  background: var(--도구줄바탕);
   border-bottom: 2px dashed var(--핑크);
 }
 
@@ -185,7 +334,7 @@ body {
   gap: 1px;
   min-height: 48px;
   padding: 4px 2px;
-  border: 2px solid #ffffff;
+  border: 2px solid var(--도구버튼테두리);
   border-radius: 12px;
   background: transparent;
   color: var(--보조글자);
@@ -216,12 +365,12 @@ body {
   margin: 0 auto;
   padding: 9px 15px;
   max-width: 320px;
-  background: #ffffff;
+  background: var(--말풍선바탕);
   border: 2.5px solid var(--핑크);
   border-radius: 18px;
   color: var(--글자);
   text-align: center;
-  box-shadow: 0 3px 0 rgba(255, 140, 198, .35);
+  box-shadow: 0 3px 0 var(--말풍선그림자);
 }
 
 /* 꼬리: 테두리색 삼각형 위에 흰 삼각형을 겹쳐 올린다 */
@@ -238,16 +387,16 @@ body {
 .말풍선.아래꼬리::after, .말풍선.위꼬리::after { border-width: 9px; }
 
 .말풍선.아래꼬리::before { bottom: -21px; border-top-color: var(--핑크); }
-.말풍선.아래꼬리::after  { bottom: -17px; border-top-color: #ffffff; }
+.말풍선.아래꼬리::after  { bottom: -17px; border-top-color: var(--말풍선바탕); }
 .말풍선.위꼬리::before   { top: -21px; border-bottom-color: var(--핑크); }
-.말풍선.위꼬리::after    { top: -17px; border-bottom-color: #ffffff; }
+.말풍선.위꼬리::after    { top: -17px; border-bottom-color: var(--말풍선바탕); }
 
 /* 창버튼·초기화 결과를 알리는 쪽지 */
 .쪽지 {
   margin-bottom: 12px;
-  background: #fffbe6;
-  border-color: #ffc94d;
-  box-shadow: 0 3px 0 rgba(240, 180, 0, .35);
+  background: var(--쪽지바탕);
+  border-color: var(--쪽지테두리);
+  box-shadow: 0 3px 0 var(--쪽지테두리);
   font-size: .95rem;
 }
 
@@ -258,7 +407,7 @@ body {
   font-size: .92rem;
   background: var(--연하늘);
   border-color: var(--진하늘);
-  box-shadow: 0 3px 0 rgba(70, 182, 239, .35);
+  box-shadow: 0 3px 0 var(--진하늘);
 }
 
 .도움말 p { margin: 0 0 6px; }
@@ -288,16 +437,16 @@ body {
   font-family: var(--손글씨);
   font-size: 1.05rem;
   line-height: 1.2;
-  text-shadow: 0 2px 2px rgba(150, 40, 95, .45);
+  text-shadow: 0 2px 2px rgba(90, 25, 60, .45);
   cursor: pointer;
   transition: transform .08s ease-out, box-shadow .08s ease-out;
   /* 색은 아래 색깔 클래스가 덮어쓴다 */
-  background: linear-gradient(180deg, #ffb3d9 0%, #ff74b4 48%, var(--진핑크) 100%);
+  background: var(--젤리핑크바탕);
   box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, .95),
-    inset 0 -9px 14px rgba(190, 30, 100, .22),
+    inset 0 2px 0 rgba(255, 255, 255, .55),
+    inset 0 -9px 14px rgba(60, 15, 40, .18),
     0 6px 0 var(--더진핑크),
-    0 10px 18px rgba(170, 40, 110, .32);
+    0 10px 18px rgba(80, 30, 60, .28);
 }
 
 /* 위쪽 광택 하이라이트 */
@@ -307,56 +456,56 @@ body {
   left: 11%; right: 11%; top: 5px;
   height: 36%;
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, .88), rgba(255, 255, 255, 0));
+  background: var(--젤리광택);
   pointer-events: none;
 }
 
 .젤리:active {
   transform: translateY(5px);
   box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, .9),
-    inset 0 -6px 12px rgba(190, 30, 100, .25),
+    inset 0 2px 0 rgba(255, 255, 255, .5),
+    inset 0 -6px 12px rgba(60, 15, 40, .2),
     0 1px 0 var(--더진핑크);
 }
 
 .젤리:focus-visible { outline: 3px dashed var(--더진라벤더); outline-offset: 3px; }
 
 .젤리.하늘 {
-  background: linear-gradient(180deg, #c4ecff 0%, #6ec8f5 48%, var(--진하늘) 100%);
+  background: var(--젤리하늘바탕);
   box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, .95),
-    inset 0 -9px 14px rgba(20, 110, 160, .22),
+    inset 0 2px 0 rgba(255, 255, 255, .55),
+    inset 0 -9px 14px rgba(10, 50, 80, .18),
     0 6px 0 var(--더진하늘),
-    0 10px 18px rgba(40, 120, 170, .3);
-  text-shadow: 0 2px 2px rgba(20, 95, 140, .45);
+    0 10px 18px rgba(20, 60, 90, .28);
+  text-shadow: 0 2px 2px rgba(10, 50, 80, .45);
 }
 
-.젤리.하늘:active { box-shadow: inset 0 2px 0 rgba(255,255,255,.9), inset 0 -6px 12px rgba(20,110,160,.25), 0 1px 0 var(--더진하늘); }
+.젤리.하늘:active { box-shadow: inset 0 2px 0 rgba(255,255,255,.5), inset 0 -6px 12px rgba(10,50,80,.2), 0 1px 0 var(--더진하늘); }
 
 .젤리.라벤더 {
-  background: linear-gradient(180deg, #e6dcff 0%, #b49bf7 48%, var(--진라벤더) 100%);
+  background: var(--젤리라벤더바탕);
   box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, .95),
-    inset 0 -9px 14px rgba(80, 40, 160, .2),
+    inset 0 2px 0 rgba(255, 255, 255, .55),
+    inset 0 -9px 14px rgba(40, 20, 80, .18),
     0 6px 0 var(--더진라벤더),
-    0 10px 18px rgba(100, 60, 180, .3);
-  text-shadow: 0 2px 2px rgba(75, 40, 140, .45);
+    0 10px 18px rgba(50, 30, 90, .28);
+  text-shadow: 0 2px 2px rgba(40, 20, 75, .45);
 }
 
-.젤리.라벤더:active { box-shadow: inset 0 2px 0 rgba(255,255,255,.9), inset 0 -6px 12px rgba(80,40,160,.25), 0 1px 0 var(--더진라벤더); }
+.젤리.라벤더:active { box-shadow: inset 0 2px 0 rgba(255,255,255,.5), inset 0 -6px 12px rgba(40,20,80,.2), 0 1px 0 var(--더진라벤더); }
 
 .젤리.하양 {
-  background: linear-gradient(180deg, #ffffff 0%, #fff2f8 48%, #ffd9ec 100%);
-  color: #b2457c;
+  background: var(--젤리하양바탕);
+  color: var(--젤리하양글자);
   text-shadow: none;
   box-shadow:
-    inset 0 2px 0 #ffffff,
-    inset 0 -8px 12px rgba(255, 150, 200, .25),
-    0 5px 0 #ffb3d5,
-    0 9px 16px rgba(190, 110, 150, .25);
+    inset 0 2px 0 rgba(255, 255, 255, .55),
+    inset 0 -8px 12px rgba(180, 110, 150, .16),
+    0 5px 0 var(--젤리하양아래),
+    0 9px 16px rgba(120, 70, 100, .22);
 }
 
-.젤리.하양:active { box-shadow: inset 0 2px 0 #ffffff, 0 1px 0 #ffb3d5; }
+.젤리.하양:active { box-shadow: inset 0 2px 0 rgba(255, 255, 255, .5), 0 1px 0 var(--젤리하양아래); }
 
 .큰젤리 { flex: 1; min-height: 60px; font-size: 1.14rem; padding: 14px 10px; }
 .작은젤리 { min-height: 44px; padding: 9px 14px; font-size: .92rem; }
@@ -371,8 +520,8 @@ body {
   margin: 0 0 2px;
   font-size: 1.4rem;
   font-weight: 400;
-  color: var(--더진핑크);
-  text-shadow: 1px 1px 0 #ffffff, 2px 2px 0 var(--연핑크);
+  color: var(--핑크글자);
+  text-shadow: 1px 1px 0 var(--말풍선바탕), 2px 2px 0 var(--연핑크);
 }
 
 .작은안내 { margin: 0 0 16px; font-size: .9rem; color: var(--보조글자); }
@@ -397,23 +546,23 @@ body {
 .진행글 {
   margin: 0 0 6px;
   font-size: 1.05rem;
-  color: var(--더진핑크);
+  color: var(--핑크글자);
 }
 
 .진행막대 {
   height: 15px;
-  background: #ffffff;
+  background: var(--진행막대바탕);
   border: 2.5px solid var(--핑크);
   border-radius: 999px;
   overflow: hidden;
-  box-shadow: inset 0 2px 4px rgba(190, 120, 160, .2);
+  box-shadow: inset 0 2px 4px rgba(120, 70, 100, .2);
 }
 
 .진행막대안 {
   display: block;
   width: 0%;
   height: 100%;
-  background: linear-gradient(180deg, #ffd1e8, var(--진핑크));
+  background: linear-gradient(180deg, var(--연핑크), var(--진핑크));
   border-radius: 999px;
   transition: width .35s ease-out;
 }
@@ -429,7 +578,7 @@ body {
   border-radius: 19px;
   background-color: var(--지브라검정);   /* 무늬를 못 그려도 테두리는 남는다 */
   background-image: var(--가는지브라무늬);
-  box-shadow: 0 7px 0 rgba(255, 140, 198, .35), 0 12px 24px rgba(120, 60, 100, .25);
+  box-shadow: 0 7px 0 var(--말풍선그림자), 0 12px 24px rgba(60, 30, 50, .25);
 }
 
 /*
@@ -445,16 +594,16 @@ body {
   padding: 44px 14px 20px;
   border-radius: 15px;
   text-align: center;
-  background-color: #fffdfe;
+  background-color: var(--종이);
   background-image:
     /* 왼쪽 분홍 여백선 */
     linear-gradient(90deg,
-      transparent 27px, rgba(255, 140, 198, .55) 27px,
-      rgba(255, 140, 198, .55) 29px, transparent 29px),
+      transparent 27px, var(--종이여백선) 27px,
+      var(--종이여백선) 29px, transparent 29px),
     /* 가로 공책 줄 */
     repeating-linear-gradient(180deg,
       transparent, transparent 31px,
-      rgba(143, 216, 255, .5) 31px, rgba(143, 216, 255, .5) 32px);
+      var(--종이줄) 31px, var(--종이줄) 32px);
 }
 
 /* 속지 위쪽 스프링 링 */
@@ -469,10 +618,10 @@ body {
 .스프링 span {
   width: 15px;
   height: 32px;
-  border: 3px solid #b9c4d6;
+  border: 3px solid var(--스프링테두리);
   border-radius: 9px;
-  background: linear-gradient(90deg, #ffffff 0%, #e6ebf5 40%, #aeb9cc 100%);
-  box-shadow: 0 1px 2px rgba(80, 90, 110, .35);
+  background: var(--스프링바탕);
+  box-shadow: 0 1px 2px rgba(40, 45, 60, .35);
 }
 
 /* 카드가 넘어갈 때마다 한 번 되는 등장 효과 */
@@ -498,9 +647,9 @@ body {
   font-family: var(--둥근일본어);
   font-size: 1.22rem;
   font-weight: 700;
-  color: var(--더진하늘);
+  color: var(--하늘글자);
   border-color: var(--하늘);
-  box-shadow: 0 3px 0 rgba(143, 216, 255, .5);
+  box-shadow: 0 3px 0 var(--하늘);
 }
 
 /* 한자 한 글자씩 세로로: 위에 글자, 아래에 훈음 */
@@ -521,8 +670,8 @@ body {
   font-size: 3.5rem;
   font-weight: 800;
   line-height: 1.15;
-  color: #4a2c44;
-  text-shadow: 2px 2px 0 var(--연핑크), 3px 3px 0 rgba(255, 140, 198, .4);
+  color: var(--한자색);
+  text-shadow: var(--한자그림자);
 }
 
 /*
@@ -537,9 +686,9 @@ body {
   font-size: .7rem;
   font-weight: 700;
   line-height: 1.3;
-  color: #c2407f;
+  color: var(--훈음글자);
   white-space: nowrap;   /* 두 줄로 쪼개지지 않게 */
-  background: var(--아주연핑크);
+  background: var(--훈음바탕);
   border: 1.5px dashed var(--핑크);
   border-radius: 9px;
 }
@@ -548,7 +697,7 @@ body {
 .뜻 {
   margin-top: 26px;
   font-size: 1.12rem;
-  color: var(--더진핑크);
+  color: var(--핑크글자);
   border-color: var(--핑크);
 }
 
@@ -571,27 +720,27 @@ body {
 
 /* 꺼진 토글은 색을 빼서 눌리지 않은 느낌으로 */
 .토글[aria-pressed="false"] {
-  background: linear-gradient(180deg, #ffffff 0%, #f6f1f5 55%, #e4dbe2 100%);
-  color: #a1909c;
+  background: var(--토글끔바탕);
+  color: var(--토글끔글자);
   text-shadow: none;
   box-shadow:
-    inset 0 2px 0 #ffffff,
-    inset 0 -7px 11px rgba(120, 100, 115, .14),
-    0 5px 0 #cdc1ca,
-    0 8px 14px rgba(120, 100, 115, .2);
+    inset 0 2px 0 rgba(255, 255, 255, .5),
+    inset 0 -7px 11px rgba(70, 55, 70, .12),
+    0 5px 0 var(--토글끔아래),
+    0 8px 14px rgba(70, 55, 70, .18);
 }
 
-.토글[aria-pressed="false"]:active { box-shadow: inset 0 2px 0 #ffffff, 0 1px 0 #cdc1ca; }
+.토글[aria-pressed="false"]:active { box-shadow: inset 0 2px 0 rgba(255, 255, 255, .5), 0 1px 0 var(--토글끔아래); }
 
 /* 켜진 토글에는 체크 표시를 붙인다 */
 .토글[aria-pressed="true"]::after { content: " ✓"; }
 
 /* 한자가 없는 단어에서는 훈음 토글을 쓸 수 없다 */
 .토글:disabled {
-  background: linear-gradient(180deg, #fbfbfb, #ededed);
-  color: #bdb6bb;
+  background: var(--토글못씀바탕);
+  color: var(--토글못씀글자);
   text-shadow: none;
-  box-shadow: inset 0 1px 0 #ffffff, 0 3px 0 #dcd6da;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), 0 3px 0 var(--토글못씀아래);
   cursor: not-allowed;
 }
 
@@ -608,8 +757,8 @@ body {
   margin: 2px 0 20px;
   font-size: 1.5rem;
   font-weight: 400;
-  color: var(--더진핑크);
-  text-shadow: 1px 1px 0 #ffffff, 2px 2px 0 var(--연핑크);
+  color: var(--핑크글자);
+  text-shadow: 1px 1px 0 var(--말풍선바탕), 2px 2px 0 var(--연핑크);
 }
 
 .완료쪽지 { margin-bottom: 18px; }
@@ -622,12 +771,12 @@ body {
   align-items: center;
   gap: 8px;
   padding: 7px 12px;
-  background: linear-gradient(180deg, #ffffff, var(--연핑크));
+  background: var(--상태줄바탕);
   border-top: 2px solid var(--핑크);
   font-family: var(--또박손글씨);
   font-size: .86rem;
   font-weight: 700;
-  color: #a85d8a;
+  color: var(--상태줄글자);
 }
 
 .상태구분 { color: var(--핑크); }
@@ -637,10 +786,10 @@ body {
 .오류 {
   margin: 14px 0 0;
   padding: 11px 13px;
-  background: #fff0f0;
-  border: 2.5px solid #ff8a8a;
+  background: var(--오류바탕);
+  border: 2.5px solid var(--오류테두리);
   border-radius: 14px;
-  color: #b53a3a;
+  color: var(--오류글자);
   font-size: .9rem;
   text-align: left;
 }
@@ -649,7 +798,7 @@ body {
   display: inline-block;
   margin-top: 4px;
   padding: 1px 5px;
-  background: #ffffff;
+  background: var(--말풍선바탕);
   border-radius: 6px;
   font-size: .85rem;
 }
@@ -660,7 +809,7 @@ body {
   position: relative;
   z-index: 1;
   font-size: .78rem;
-  color: #8a6a80;
+  color: var(--꼬리말글자);
   text-align: center;
 }
 
