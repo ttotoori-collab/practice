@@ -635,7 +635,7 @@ body {
 .리본 {
   position: absolute;
   left: 27%;
-  top: 62%;
+  top: 66%;
   width: 46%;
   height: auto;
   transform: rotate(-4deg);
@@ -650,9 +650,9 @@ body {
 .악마장식 {
   position: absolute;
   left: -18.2%;    /*  -60 / 330 */
-  top: -16.1%;     /*  -70 / 434 */
+  top: -14.7%;     /*  -70 / 476 */
   width: 136.4%;   /*  450 / 330 */
-  height: 125.6%;  /*  545 / 434 */
+  height: 123.3%;  /*  587 / 476 */
   display: none;
   pointer-events: none;
 }
