@@ -42,6 +42,12 @@
     repeating-linear-gradient(74deg,
       var(--지브라검정) 0 7px, #ffffff 7px 11px,
       var(--지브라검정) 11px 15px, #ffffff 15px 24px);
+
+  /* 카드 테두리용. 테두리가 얇으니 줄무늬도 가늘게 한다. */
+  --가는지브라무늬:
+    repeating-linear-gradient(74deg,
+      var(--지브라검정) 0 4px, #ffffff 4px 6px,
+      var(--지브라검정) 6px 8px, #ffffff 8px 13px);
 }
 
 * { box-sizing: border-box; }
@@ -417,23 +423,38 @@ body {
 /* ── 단어 카드 (스프링 다이어리 속지) ──────────────── */
 
 /* 지브라 무늬 테두리 */
+/* 지브라 무늬는 여기, 카드 바깥 테두리에만 얇게 둘린다. */
 .다이어리바깥 {
-  padding: 7px;
-  border-radius: 22px;
-  background: var(--지브라무늬);
+  padding: 4px;
+  border-radius: 19px;
+  background-color: var(--지브라검정);   /* 무늬를 못 그려도 테두리는 남는다 */
+  background-image: var(--가는지브라무늬);
   box-shadow: 0 7px 0 rgba(255, 140, 198, .35), 0 12px 24px rgba(120, 60, 100, .25);
 }
 
+/*
+ * 속지는 흰 줄노트다.
+ *
+ * 배경색을 background-image 와 따로 적는다. 한 줄짜리 background 로 묶으면
+ * 줄무늬 그림 한 겹이라도 브라우저가 못 읽을 때 선언 전체가 버려져서
+ * 종이가 투명해지고 바깥 지브라 무늬가 글씨 뒤로 비쳐 버린다.
+ * 색 띄엄띄엄 적기(0 31px 같은 두 자리 표기)도 쓰지 않는다. 옛 브라우저가 못 읽는다.
+ */
 .다이어리 {
   position: relative;
   padding: 44px 14px 20px;
-  border-radius: 16px;
+  border-radius: 15px;
   text-align: center;
-  /* 공책 줄 + 왼쪽 분홍 여백선 */
-  background:
-    linear-gradient(90deg, transparent 27px, rgba(255, 140, 198, .55) 27px 29px, transparent 29px),
-    repeating-linear-gradient(180deg, transparent 0 31px, rgba(143, 216, 255, .45) 31px 32px),
-    #fffdfe;
+  background-color: #fffdfe;
+  background-image:
+    /* 왼쪽 분홍 여백선 */
+    linear-gradient(90deg,
+      transparent 27px, rgba(255, 140, 198, .55) 27px,
+      rgba(255, 140, 198, .55) 29px, transparent 29px),
+    /* 가로 공책 줄 */
+    repeating-linear-gradient(180deg,
+      transparent, transparent 31px,
+      rgba(143, 216, 255, .5) 31px, rgba(143, 216, 255, .5) 32px);
 }
 
 /* 속지 위쪽 스프링 링 */
@@ -458,8 +479,8 @@ body {
 .카드등장 { animation: 카드넘김 .3s ease-out; }
 
 @keyframes 카드넘김 {
-  from { opacity: .25; transform: translateX(14px) rotate(1.2deg); }
-  to   { opacity: 1; transform: none; }
+  from { transform: translateX(14px) rotate(1.2deg); }
+  to   { transform: none; }
 }
 
 .종이장식 { position: absolute; font-size: 1.05rem; opacity: .8; }
@@ -504,19 +525,23 @@ body {
   text-shadow: 2px 2px 0 var(--연핑크), 3px 3px 0 rgba(255, 140, 198, .4);
 }
 
+/*
+ * 훈음은 "말미암을 유" 처럼 긴 것도 한 줄로 보여야 한다.
+ * 그래서 칸 너비를 고정하지 않고 글자 수에 맞춰 늘린다.
+ * 칸이 한자보다 넓어지면 글자 사이가 그만큼 벌어지는데, 훈음을 끄면 다시 붙는다.
+ */
 .훈음 {
-  width: 5.4em;
   margin-top: 5px;
-  padding: 2px 3px;
+  padding: 2px 7px;
   font-family: var(--또박손글씨);
   font-size: .7rem;
   font-weight: 700;
-  line-height: 1.22;
+  line-height: 1.3;
   color: #c2407f;
+  white-space: nowrap;   /* 두 줄로 쪼개지지 않게 */
   background: var(--아주연핑크);
   border: 1.5px dashed var(--핑크);
   border-radius: 9px;
-  word-break: keep-all;   /* 훈음은 낱말 단위로만 줄바꿈 */
 }
 
 /* 뜻 말풍선 (단어 아래) */
