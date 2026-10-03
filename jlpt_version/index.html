@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>일본어 단어장 ♡ JLPT N5~N3</title>
+<meta name="description" content="JLPT N5~N3 일본어 단어를 히라가나·한자 훈음·뜻을 켜고 끄면서 외우는 단어장. 모르는 단어만 반복해서 보여 줍니다.">
+<meta name="theme-color" content="#ff5fa2">
+
+<!-- 글꼴: 한국어는 손글씨체(Jua·Gaegu), 일본어는 둥근 글씨체(M PLUS Rounded 1c) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gaegu:wght@400;700&family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap">
+
+<link rel="stylesheet" href="스타일.css">
+</head>
+<body>
+
+<!-- 배경에 떠다니는 장식. 읽어 줄 내용이 아니라 화면 낭독기에서 숨긴다. -->
+<div class="반짝이층" aria-hidden="true">
+  <span class="반짝이" style="--왼쪽: 6%;  --위: 8%;  --늦기: 0s">✨</span>
+  <span class="반짝이" style="--왼쪽: 88%; --위: 14%; --늦기: .7s">⭐</span>
+  <span class="반짝이" style="--왼쪽: 12%; --위: 46%; --늦기: 1.4s">🦋</span>
+  <span class="반짝이" style="--왼쪽: 92%; --위: 58%; --늦기: 2.1s">💗</span>
+  <span class="반짝이" style="--왼쪽: 4%;  --위: 78%; --늦기: 1s">🎀</span>
+  <span class="반짝이" style="--왼쪽: 90%; --위: 86%; --늦기: 1.8s">✨</span>
+</div>
+
+<!-- 2000년대 윈도우 창 모양 틀 -->
+<div class="창" id="창">
+
+  <!-- 제목 표시줄 -->
+  <div class="제목줄">
+    <span class="제목줄아이콘" aria-hidden="true">💖</span>
+    <h1 class="제목줄제목">일본어 단어장 ♡ JLPT</h1>
+    <div class="창버튼들">
+      <button type="button" class="창버튼" id="최소화버튼" aria-label="창 접기" title="접기">─</button>
+      <button type="button" class="창버튼" id="닫기버튼" aria-label="닫기" title="닫기">✕</button>
+    </div>
+  </div>
+
+  <!-- 포인트 장식: 지브라 무늬 띠 -->
+  <div class="지브라줄" aria-hidden="true"></div>
+
+  <!-- 상단 툴바 -->
+  <div class="도구줄" role="toolbar" aria-label="도구 모음">
+    <button type="button" class="도구버튼" id="급수선택버튼">
+      <span class="도구아이콘" aria-hidden="true">🏠</span><span class="도구이름">급수</span>
+    </button>
+    <button type="button" class="도구버튼" id="섞기버튼">
+      <span class="도구아이콘" aria-hidden="true">🔀</span><span class="도구이름">섞기</span>
+    </button>
+    <button type="button" class="도구버튼" id="초기화버튼">
+      <span class="도구아이콘" aria-hidden="true">🧹</span><span class="도구이름">초기화</span>
+    </button>
+    <button type="button" class="도구버튼" id="도움말버튼" aria-expanded="false">
+      <span class="도구아이콘" aria-hidden="true">❔</span><span class="도구이름">도움말</span>
+    </button>
+  </div>
+
+  <!-- 창 안쪽 -->
+  <div class="창내용" id="창내용">
+
+    <!-- 창버튼·초기화 같은 알림이 뜨는 자리 -->
+    <p class="말풍선 쪽지" id="쪽지" role="status" hidden></p>
+
+    <!-- 도움말 -->
+    <section class="말풍선 도움말" id="도움말" hidden>
+      <p><b>히라가나</b> · <b>훈음</b> · <b>뜻</b> 버튼으로 보고 싶은 것만 켜요.</p>
+      <p><b>알고있음</b> 을 누른 단어는 다음 회차에서 빠지고, <b>공부하겠음</b> 을 누른 단어만 다시 나와요.</p>
+      <p>기록은 이 브라우저에 저장되니까 새로고침해도 괜찮아요. 🎀</p>
+    </section>
+
+    <!-- 초기화 확인 -->
+    <section class="확인판" id="확인판" hidden>
+      <p class="확인글">기록을 지울까요? 되돌릴 수 없어요 🥺</p>
+      <div class="확인버튼줄">
+        <button type="button" class="젤리 작은젤리 핑크" id="이급수초기화버튼">이 급수만</button>
+        <button type="button" class="젤리 작은젤리 라벤더" id="전체초기화버튼">전체 다</button>
+        <button type="button" class="젤리 작은젤리 하양" id="초기화취소버튼">안 할래</button>
+      </div>
+    </section>
+
+    <!-- 1번째 화면: 급수 선택 -->
+    <section class="화면 급수화면" id="급수화면" aria-labelledby="급수제목">
+      <svg class="리본" viewBox="0 0 160 60" aria-hidden="true">
+        <path d="M80 34c-14-2-26-16-40-22-8-3-14 2-13 10 1 9 13 15 29 16-11 3-20 7-20 14 0 6 7 9 14 6 12-5 22-14 30-22z" fill="#ff8cc6" stroke="#e0397f" stroke-width="2.5"/>
+        <path d="M80 34c14-2 26-16 40-22 8-3 14 2 13 10-1 9-13 15-29 16 11 3 20 7 20 14 0 6-7 9-14 6-12-5-22-14-30-22z" fill="#ffa8d2" stroke="#e0397f" stroke-width="2.5"/>
+        <ellipse cx="80" cy="34" rx="11" ry="9" fill="#fff0f7" stroke="#e0397f" stroke-width="2.5"/>
+      </svg>
+      <h2 class="급수제목" id="급수제목">급수를 골라 주세요</h2>
+      <p class="작은안내">모르는 단어만 계속 돌아와요 💫</p>
+      <div class="급수버튼줄" id="급수버튼줄">
+        <!-- 급수 젤리 버튼은 앱.js 가 채운다 -->
+      </div>
+      <p class="오류" id="오류" role="alert" hidden></p>
+    </section>
+
+    <!-- 2번째 화면: 단어 카드 -->
+    <section class="화면 카드화면" id="카드화면" hidden aria-labelledby="진행글">
+      <div class="진행칸">
+        <p class="진행글" id="진행글">외운 단어 0 / 0</p>
+        <div class="진행막대"><span class="진행막대안" id="진행막대안"></span></div>
+        <p class="회차글" id="회차글">1회차 · 남은 카드 0장</p>
+      </div>
+
+      <!-- 지브라 무늬 테두리 안에 스프링 다이어리 속지 -->
+      <div class="다이어리바깥">
+        <article class="다이어리" id="다이어리">
+          <div class="스프링" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <span class="종이장식 왼쪽아래" aria-hidden="true">🌸</span>
+          <span class="종이장식 오른쪽아래" aria-hidden="true">⭐</span>
+
+          <p class="말풍선 읽는법 아래꼬리" id="읽는법" hidden></p>
+          <div class="단어줄" id="단어줄" aria-live="polite"></div>
+          <p class="말풍선 뜻 위꼬리" id="뜻" hidden></p>
+          <p class="가나알림" id="가나알림" hidden>한자가 없는 단어예요</p>
+        </article>
+      </div>
+
+      <!-- 보여 줄 것 켜고 끄기 -->
+      <div class="토글줄">
+        <button type="button" class="젤리 토글 하늘" id="히라가나토글" aria-pressed="false">히라가나</button>
+        <button type="button" class="젤리 토글 라벤더" id="훈음토글" aria-pressed="false">훈음</button>
+        <button type="button" class="젤리 토글 핑크" id="뜻토글" aria-pressed="false">뜻</button>
+      </div>
+
+      <!-- 학습 버튼 -->
+      <div class="학습줄">
+        <button type="button" class="젤리 큰젤리 핑크" id="공부하겠음버튼">📖 공부하겠음</button>
+        <button type="button" class="젤리 큰젤리 하늘" id="알고있음버튼">💗 알고있음</button>
+      </div>
+    </section>
+
+    <!-- 3번째 화면: 한 급수를 다 외웠을 때 -->
+    <section class="화면 완료화면" id="완료화면" hidden aria-labelledby="완료제목">
+      <p class="완료이모지" aria-hidden="true">🎉🎀🎉</p>
+      <h2 class="완료제목" id="완료제목">다 외웠어요!</h2>
+      <p class="말풍선 완료쪽지 위꼬리" id="완료쪽지">참 잘했어요 ♡</p>
+      <div class="완료버튼줄">
+        <button type="button" class="젤리 큰젤리 핑크" id="다시외우기버튼">🔁 이 급수 다시</button>
+        <button type="button" class="젤리 큰젤리 하늘" id="다른급수버튼">🏠 다른 급수</button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- 하단 상태 표시줄 -->
+  <div class="상태줄">
+    <span id="상태급수">N–</span>
+    <span class="상태구분" aria-hidden="true">|</span>
+    <span id="상태진행">0/0</span>
+    <span class="상태구분" aria-hidden="true">|</span>
+    <span id="상태시간">공부시간 00:00</span>
+  </div>
+
+</div>
+
+<p class="꼬리말">JLPT N5~N3 연습용 단어장 · 기록은 이 브라우저에만 저장돼요 🩷</p>
+
+<script type="module" src="js/앱.js"></script>
+</body>
+</html>

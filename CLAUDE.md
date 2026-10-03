@@ -1,17 +1,23 @@
 # CLAUDE.md
 
-손글씨 숫자 인식기. 같은 CNN 모델을 **웹**과 **Windows 데스크톱** 두 가지로 제공한다.
+저장소에 앱이 둘 들어 있다. 서로 코드를 공유하지 않는다.
 
-작업하려는 폴더의 CLAUDE.md 를 먼저 읽는다. 이 파일에는 두 버전에 **공통으로**
-적용되는 것만 적는다.
+- **손글씨 숫자 인식기** — 같은 CNN 모델을 **웹**과 **Windows 데스크톱** 두 가지로 제공한다.
+- **일본어 단어장** — JLPT N5~N3 단어 암기용 웹 앱.
+
+작업하려는 폴더의 CLAUDE.md 를 먼저 읽는다. 이 파일에는 **공통으로** 적용되는 것만 적는다.
 
 | 폴더 | 무엇 | 안내 |
 |---|---|---|
-| `desktop_version/` | PyTorch + tkinter 데스크톱 앱. **학습을 담당한다** | [CLAUDE.md](desktop_version/CLAUDE.md) |
-| `web_version/` | 순수 자바스크립트 웹 앱. 외부 라이브러리 없음 | [CLAUDE.md](web_version/CLAUDE.md) |
+| `desktop_version/` | 숫자 인식기. PyTorch + tkinter 데스크톱 앱. **학습을 담당한다** | [CLAUDE.md](desktop_version/CLAUDE.md) |
+| `web_version/` | 숫자 인식기. 순수 자바스크립트 웹 앱. 외부 라이브러리 없음 | [CLAUDE.md](web_version/CLAUDE.md) |
+| `jlpt_version/` | 일본어 단어장. 순수 자바스크립트 웹 앱 | [CLAUDE.md](jlpt_version/CLAUDE.md) |
 | `docs/superpowers/specs/` | 설계 문서 | — |
 
 테스트 스위트, 린터, 패키지 매니페스트가 없다. 검증 방법은 각 폴더의 CLAUDE.md 에 있다.
+
+웹 앱이 둘이라 GitHub Pages 한 사이트에 나눠 올린다. `.github/workflows/pages.yml` 이
+`web_version/` 을 뿌리(`/`)에, `jlpt_version/` 을 `/jlpt/` 아래에 둔다.
 
 ## 코드 규약: 모든 식별자와 주석이 한글
 
@@ -26,8 +32,12 @@ PowerShell 변수(`$앱식별자`), 자바스크립트 함수·변수·클래스
 | `desktop_version/손글씨앱 실행.bat` 전체 | cmd 가 멀티바이트 문자에서 바이트 위치를 잃는다 |
 | DOM·표준 API 이름 (`getImageData` 등) | 표준이 정한 이름 |
 | `.github/workflows/pages.yml` 의 job·step `id` | GitHub 가 영문·숫자만 받는다 |
+| `jlpt_version/데이터/words.json` 의 파일 이름과 필드 이름 | 사용자가 정해 준 데이터 형식 |
 
-## 두 버전이 반드시 맞춰야 하는 값
+## 손글씨 숫자 인식기: 두 버전이 반드시 맞춰야 하는 값
+
+> 아래 세 절(맞춰야 하는 값·전처리 6단계·정확도 기준)은 숫자 인식기 이야기다.
+> 일본어 단어장과는 상관이 없다.
 
 어긋나도 오류가 나지 않고 **인식률만 조용히 떨어진다.** 한쪽을 고치면 반대쪽도 고친다.
 
@@ -46,7 +56,7 @@ PowerShell 변수(`$앱식별자`), 자바스크립트 함수·변수·클래스
 python web_version/도구/가중치_내보내기.py
 ```
 
-## 전처리 6단계 (인식률의 핵심)
+## 손글씨 숫자 인식기: 전처리 6단계 (인식률의 핵심)
 
 280×280 그림을 28×28로 그냥 줄이면 인식률이 크게 떨어진다.
 MNIST 가 만들어진 절차를 그대로 재현해야 한다. 양쪽 구현이 같은 순서를 밟는다.
@@ -60,7 +70,7 @@ MNIST 가 만들어진 절차를 그대로 재현해야 한다. 양쪽 구현이
 
 이 절차를 단순화하려는 시도는 정확도를 떨어뜨린다.
 
-## 정확도 기준
+## 손글씨 숫자 인식기: 정확도 기준
 
 두 버전 모두 MNIST 평가 이미지 앞 200장에서 **190/200 이상**이어야 한다.
 현재는 둘 다 **199/200** 이고, 틀리는 이미지(43번, 2를 4로 봄)까지 같다.

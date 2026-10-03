@@ -1,0 +1,655 @@
+/*
+ * 일본어 단어장 스타일 — 2000년대 Y2K 핑크 감성.
+ *
+ * 분위기 기준
+ *   · 틀은 옛날 윈도우 창 (제목 표시줄 + 툴바 + 상태 표시줄)
+ *   · 단어 카드는 스프링 링이 달린 다이어리 속지
+ *   · 배경은 하늘색~핑크 그라데이션 + 물방울 무늬
+ *   · 버튼은 동그랗고 광택 있는 젤리
+ *   · 안내 문구는 말풍선
+ *   · 포인트로 지브라 무늬
+ *
+ * 모바일 화면(폭 360~460px)을 기준으로 짜고, 넓은 화면에서는 가운데로 모은다.
+ * 손가락으로 누르는 버튼은 최소 48px 높이를 지킨다.
+ */
+
+:root {
+  /* 색 */
+  --핑크: #ff8cc6;
+  --진핑크: #ff5fa2;
+  --더진핑크: #e0397f;
+  --연핑크: #ffd9ec;
+  --아주연핑크: #fff0f7;
+  --하늘: #8fd8ff;
+  --진하늘: #46b6ef;
+  --더진하늘: #1f90cc;
+  --연하늘: #e2f4ff;
+  --라벤더: #c9b6ff;
+  --진라벤더: #9c7bf0;
+  --더진라벤더: #7a56d6;
+  --흰판: #fffdfe;
+  --글자: #5a3550;
+  --보조글자: #a8749a;
+  --지브라검정: #3b2a35;
+
+  /* 글꼴 */
+  --손글씨: "Jua", "Gaegu", "Malgun Gothic", "맑은 고딕", sans-serif;
+  --또박손글씨: "Gaegu", "Jua", "Malgun Gothic", "맑은 고딕", sans-serif;
+  --둥근일본어: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", "Yu Gothic", "Malgun Gothic", sans-serif;
+
+  /* 지브라 무늬는 여러 곳에서 쓴다 */
+  --지브라무늬:
+    repeating-linear-gradient(74deg,
+      var(--지브라검정) 0 7px, #ffffff 7px 11px,
+      var(--지브라검정) 11px 15px, #ffffff 15px 24px);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 14px 10px 24px;
+  min-height: 100vh;
+  color: var(--글자);
+  font-family: var(--손글씨);
+  font-size: 17px;
+  line-height: 1.55;
+  /* 물방울(폴카도트) 두 겹 + 하늘색~핑크 그라데이션 */
+  background:
+    radial-gradient(circle at 12px 12px, rgba(255, 255, 255, .8) 4.5px, transparent 5.5px) 0 0 / 44px 44px,
+    radial-gradient(circle at 12px 12px, rgba(255, 255, 255, .45) 3px, transparent 4px) 22px 22px / 44px 44px,
+    linear-gradient(165deg, #b8e6ff 0%, #d9f0ff 32%, #ffdcee 72%, #ffbfdf 100%);
+  background-attachment: fixed;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ── 배경 장식 ─────────────────────────────────────── */
+
+.반짝이층 {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;   /* 장식이 버튼을 가로막지 않게 */
+  z-index: 0;
+}
+
+.반짝이 {
+  position: absolute;
+  left: var(--왼쪽);
+  top: var(--위);
+  font-size: 1.5rem;
+  opacity: .85;
+  animation: 반짝반짝 3.6s ease-in-out infinite;
+  animation-delay: var(--늦기);
+}
+
+@keyframes 반짝반짝 {
+  0%, 100% { transform: translateY(0) rotate(-8deg) scale(1); opacity: .55; }
+  50%      { transform: translateY(-10px) rotate(8deg) scale(1.18); opacity: 1; }
+}
+
+/* ── 윈도우 창 틀 ──────────────────────────────────── */
+
+.창 {
+  position: relative;
+  z-index: 1;
+  max-width: 460px;
+  margin: 0 auto;
+  background: var(--흰판);
+  border: 3px solid var(--핑크);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 3px #ffffff,
+    0 8px 0 rgba(255, 95, 162, .3),
+    0 16px 34px rgba(120, 60, 100, .3);
+}
+
+.제목줄 {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 10px;
+  background: linear-gradient(180deg, #ffb3dd 0%, var(--핑크) 45%, var(--진핑크) 100%);
+  border-bottom: 2px solid var(--더진핑크);
+}
+
+/* 제목 표시줄 위쪽 광택 */
+.제목줄::before {
+  content: "";
+  position: absolute;
+  left: 4px; right: 4px; top: 3px;
+  height: 42%;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .8), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+.제목줄아이콘 { font-size: 1.1rem; }
+
+.제목줄제목 {
+  flex: 1;
+  margin: 0;
+  font-size: 1.12rem;
+  font-weight: 400;
+  color: #ffffff;
+  text-shadow: 0 2px 2px rgba(170, 40, 110, .55);
+  letter-spacing: .01em;
+}
+
+.창버튼들 { display: flex; gap: 5px; }
+
+.창버튼 {
+  width: 30px;
+  height: 26px;
+  border: 2px solid var(--더진핑크);
+  border-radius: 7px;
+  background: linear-gradient(180deg, #fff6fb 0%, #ffd4e9 55%, #ffb0d5 100%);
+  color: #a33068;
+  font-family: var(--손글씨);
+  font-size: .85rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 #ffffff, 0 2px 0 rgba(170, 40, 110, .35);
+}
+
+.창버튼:active { transform: translateY(2px); box-shadow: inset 0 1px 0 #ffffff; }
+
+.지브라줄 {
+  height: 13px;
+  background: var(--지브라무늬);
+  border-bottom: 2px solid var(--연핑크);
+}
+
+/* ── 툴바 ──────────────────────────────────────────── */
+
+.도구줄 {
+  display: flex;
+  gap: 6px;
+  padding: 7px 8px;
+  background: linear-gradient(180deg, var(--연하늘), #ffffff);
+  border-bottom: 2px dashed var(--핑크);
+}
+
+.도구버튼 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  min-height: 48px;
+  padding: 4px 2px;
+  border: 2px solid #ffffff;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--보조글자);
+  font-family: var(--손글씨);
+  cursor: pointer;
+}
+
+.도구버튼:hover { background: var(--아주연핑크); border-color: var(--연핑크); }
+.도구버튼:active { transform: translateY(1px); }
+.도구아이콘 { font-size: 1.22rem; line-height: 1.1; }
+.도구이름 { font-size: .74rem; }
+
+/* ── 창 안쪽 공통 ──────────────────────────────────── */
+
+.창내용 { padding: 14px 13px 16px; }
+.창.접힘 .창내용, .창.접힘 .도구줄, .창.접힘 .상태줄 { display: none; }
+
+.화면 { animation: 쏙등장 .28s ease-out; }
+
+@keyframes 쏙등장 {
+  from { opacity: 0; transform: translateY(10px) scale(.98); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* 말풍선 — 안내 문구는 모두 이 모양 */
+.말풍선 {
+  position: relative;
+  margin: 0 auto;
+  padding: 9px 15px;
+  max-width: 320px;
+  background: #ffffff;
+  border: 2.5px solid var(--핑크);
+  border-radius: 18px;
+  color: var(--글자);
+  text-align: center;
+  box-shadow: 0 3px 0 rgba(255, 140, 198, .35);
+}
+
+/* 꼬리: 테두리색 삼각형 위에 흰 삼각형을 겹쳐 올린다 */
+.말풍선.아래꼬리::before, .말풍선.아래꼬리::after,
+.말풍선.위꼬리::before, .말풍선.위꼬리::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  border: 11px solid transparent;
+  transform: translateX(-50%);
+}
+
+/* 흰 삼각형(::after)을 2px 작게 겹쳐서 테두리색이 둘레로만 보이게 한다. */
+.말풍선.아래꼬리::after, .말풍선.위꼬리::after { border-width: 9px; }
+
+.말풍선.아래꼬리::before { bottom: -21px; border-top-color: var(--핑크); }
+.말풍선.아래꼬리::after  { bottom: -17px; border-top-color: #ffffff; }
+.말풍선.위꼬리::before   { top: -21px; border-bottom-color: var(--핑크); }
+.말풍선.위꼬리::after    { top: -17px; border-bottom-color: #ffffff; }
+
+/* 창버튼·초기화 결과를 알리는 쪽지 */
+.쪽지 {
+  margin-bottom: 12px;
+  background: #fffbe6;
+  border-color: #ffc94d;
+  box-shadow: 0 3px 0 rgba(240, 180, 0, .35);
+  font-size: .95rem;
+}
+
+.도움말 {
+  margin-bottom: 14px;
+  max-width: none;
+  text-align: left;
+  font-size: .92rem;
+  background: var(--연하늘);
+  border-color: var(--진하늘);
+  box-shadow: 0 3px 0 rgba(70, 182, 239, .35);
+}
+
+.도움말 p { margin: 0 0 6px; }
+.도움말 p:last-child { margin-bottom: 0; }
+
+.확인판 {
+  margin-bottom: 14px;
+  padding: 12px;
+  background: var(--아주연핑크);
+  border: 2.5px dashed var(--진핑크);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.확인글 { margin: 0 0 10px; font-size: .96rem; }
+.확인버튼줄 { display: flex; gap: 7px; justify-content: center; flex-wrap: wrap; }
+
+/* ── 젤리 버튼 ─────────────────────────────────────── */
+
+.젤리 {
+  position: relative;
+  min-height: 50px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 999px;
+  color: #ffffff;
+  font-family: var(--손글씨);
+  font-size: 1.05rem;
+  line-height: 1.2;
+  text-shadow: 0 2px 2px rgba(150, 40, 95, .45);
+  cursor: pointer;
+  transition: transform .08s ease-out, box-shadow .08s ease-out;
+  /* 색은 아래 색깔 클래스가 덮어쓴다 */
+  background: linear-gradient(180deg, #ffb3d9 0%, #ff74b4 48%, var(--진핑크) 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, .95),
+    inset 0 -9px 14px rgba(190, 30, 100, .22),
+    0 6px 0 var(--더진핑크),
+    0 10px 18px rgba(170, 40, 110, .32);
+}
+
+/* 위쪽 광택 하이라이트 */
+.젤리::before {
+  content: "";
+  position: absolute;
+  left: 11%; right: 11%; top: 5px;
+  height: 36%;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .88), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+.젤리:active {
+  transform: translateY(5px);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, .9),
+    inset 0 -6px 12px rgba(190, 30, 100, .25),
+    0 1px 0 var(--더진핑크);
+}
+
+.젤리:focus-visible { outline: 3px dashed var(--더진라벤더); outline-offset: 3px; }
+
+.젤리.하늘 {
+  background: linear-gradient(180deg, #c4ecff 0%, #6ec8f5 48%, var(--진하늘) 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, .95),
+    inset 0 -9px 14px rgba(20, 110, 160, .22),
+    0 6px 0 var(--더진하늘),
+    0 10px 18px rgba(40, 120, 170, .3);
+  text-shadow: 0 2px 2px rgba(20, 95, 140, .45);
+}
+
+.젤리.하늘:active { box-shadow: inset 0 2px 0 rgba(255,255,255,.9), inset 0 -6px 12px rgba(20,110,160,.25), 0 1px 0 var(--더진하늘); }
+
+.젤리.라벤더 {
+  background: linear-gradient(180deg, #e6dcff 0%, #b49bf7 48%, var(--진라벤더) 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, .95),
+    inset 0 -9px 14px rgba(80, 40, 160, .2),
+    0 6px 0 var(--더진라벤더),
+    0 10px 18px rgba(100, 60, 180, .3);
+  text-shadow: 0 2px 2px rgba(75, 40, 140, .45);
+}
+
+.젤리.라벤더:active { box-shadow: inset 0 2px 0 rgba(255,255,255,.9), inset 0 -6px 12px rgba(80,40,160,.25), 0 1px 0 var(--더진라벤더); }
+
+.젤리.하양 {
+  background: linear-gradient(180deg, #ffffff 0%, #fff2f8 48%, #ffd9ec 100%);
+  color: #b2457c;
+  text-shadow: none;
+  box-shadow:
+    inset 0 2px 0 #ffffff,
+    inset 0 -8px 12px rgba(255, 150, 200, .25),
+    0 5px 0 #ffb3d5,
+    0 9px 16px rgba(190, 110, 150, .25);
+}
+
+.젤리.하양:active { box-shadow: inset 0 2px 0 #ffffff, 0 1px 0 #ffb3d5; }
+
+.큰젤리 { flex: 1; min-height: 60px; font-size: 1.14rem; padding: 14px 10px; }
+.작은젤리 { min-height: 44px; padding: 9px 14px; font-size: .92rem; }
+
+/* ── 급수 선택 화면 ────────────────────────────────── */
+
+.급수화면 { text-align: center; }
+
+.리본 { width: 128px; height: 48px; margin: 0 auto 2px; display: block; }
+
+.급수제목 {
+  margin: 0 0 2px;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--더진핑크);
+  text-shadow: 1px 1px 0 #ffffff, 2px 2px 0 var(--연핑크);
+}
+
+.작은안내 { margin: 0 0 16px; font-size: .9rem; color: var(--보조글자); }
+
+.급수버튼줄 { display: flex; flex-direction: column; gap: 13px; }
+
+.급수버튼 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: 74px;
+  font-size: 1.5rem;
+}
+
+.급수버튼설명 { font-size: .82rem; opacity: .95; text-shadow: none; }
+
+/* ── 진행 표시 ─────────────────────────────────────── */
+
+.진행칸 { margin-bottom: 12px; text-align: center; }
+
+.진행글 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  color: var(--더진핑크);
+}
+
+.진행막대 {
+  height: 15px;
+  background: #ffffff;
+  border: 2.5px solid var(--핑크);
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(190, 120, 160, .2);
+}
+
+.진행막대안 {
+  display: block;
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(180deg, #ffd1e8, var(--진핑크));
+  border-radius: 999px;
+  transition: width .35s ease-out;
+}
+
+.회차글 { margin: 5px 0 0; font-size: .8rem; color: var(--보조글자); }
+
+/* ── 단어 카드 (스프링 다이어리 속지) ──────────────── */
+
+/* 지브라 무늬 테두리 */
+.다이어리바깥 {
+  padding: 7px;
+  border-radius: 22px;
+  background: var(--지브라무늬);
+  box-shadow: 0 7px 0 rgba(255, 140, 198, .35), 0 12px 24px rgba(120, 60, 100, .25);
+}
+
+.다이어리 {
+  position: relative;
+  padding: 44px 14px 20px;
+  border-radius: 16px;
+  text-align: center;
+  /* 공책 줄 + 왼쪽 분홍 여백선 */
+  background:
+    linear-gradient(90deg, transparent 27px, rgba(255, 140, 198, .55) 27px 29px, transparent 29px),
+    repeating-linear-gradient(180deg, transparent 0 31px, rgba(143, 216, 255, .45) 31px 32px),
+    #fffdfe;
+}
+
+/* 속지 위쪽 스프링 링 */
+.스프링 {
+  position: absolute;
+  top: -11px; left: 14px; right: 14px;
+  height: 34px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.스프링 span {
+  width: 15px;
+  height: 32px;
+  border: 3px solid #b9c4d6;
+  border-radius: 9px;
+  background: linear-gradient(90deg, #ffffff 0%, #e6ebf5 40%, #aeb9cc 100%);
+  box-shadow: 0 1px 2px rgba(80, 90, 110, .35);
+}
+
+/* 카드가 넘어갈 때마다 한 번 되는 등장 효과 */
+.카드등장 { animation: 카드넘김 .3s ease-out; }
+
+@keyframes 카드넘김 {
+  from { opacity: .25; transform: translateX(14px) rotate(1.2deg); }
+  to   { opacity: 1; transform: none; }
+}
+
+.종이장식 { position: absolute; font-size: 1.05rem; opacity: .8; }
+.종이장식.왼쪽아래 { bottom: 8px; left: 10px; }
+.종이장식.오른쪽아래 { bottom: 8px; right: 10px; }
+
+/* 읽는 법 말풍선 (한자 위) */
+.읽는법::before { border-top-color: var(--하늘); }
+
+/* 속지 안 말풍선은 종이 장식을 덜 가리게 폭을 조금 줄인다. */
+.읽는법, .뜻 { max-width: 92%; }
+
+.읽는법 {
+  margin-bottom: 26px;
+  font-family: var(--둥근일본어);
+  font-size: 1.22rem;
+  font-weight: 700;
+  color: var(--더진하늘);
+  border-color: var(--하늘);
+  box-shadow: 0 3px 0 rgba(143, 216, 255, .5);
+}
+
+/* 한자 한 글자씩 세로로: 위에 글자, 아래에 훈음 */
+.단어줄 {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-height: 92px;
+  margin-bottom: 8px;
+}
+
+.글자 { display: flex; flex-direction: column; align-items: center; }
+
+.한자 {
+  font-family: var(--둥근일본어);
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: #4a2c44;
+  text-shadow: 2px 2px 0 var(--연핑크), 3px 3px 0 rgba(255, 140, 198, .4);
+}
+
+.훈음 {
+  width: 5.4em;
+  margin-top: 5px;
+  padding: 2px 3px;
+  font-family: var(--또박손글씨);
+  font-size: .7rem;
+  font-weight: 700;
+  line-height: 1.22;
+  color: #c2407f;
+  background: var(--아주연핑크);
+  border: 1.5px dashed var(--핑크);
+  border-radius: 9px;
+  word-break: keep-all;   /* 훈음은 낱말 단위로만 줄바꿈 */
+}
+
+/* 뜻 말풍선 (단어 아래) */
+.뜻 {
+  margin-top: 26px;
+  font-size: 1.12rem;
+  color: var(--더진핑크);
+  border-color: var(--핑크);
+}
+
+.가나알림 { margin: 10px 0 0; font-size: .78rem; color: var(--보조글자); }
+
+/* ── 카드 버튼들 ───────────────────────────────────── */
+
+.토글줄 {
+  display: flex;
+  gap: 7px;
+  margin: 16px 0 12px;
+}
+
+.토글 {
+  flex: 1;
+  min-height: 48px;
+  padding: 10px 4px;
+  font-size: .95rem;
+}
+
+/* 꺼진 토글은 색을 빼서 눌리지 않은 느낌으로 */
+.토글[aria-pressed="false"] {
+  background: linear-gradient(180deg, #ffffff 0%, #f6f1f5 55%, #e4dbe2 100%);
+  color: #a1909c;
+  text-shadow: none;
+  box-shadow:
+    inset 0 2px 0 #ffffff,
+    inset 0 -7px 11px rgba(120, 100, 115, .14),
+    0 5px 0 #cdc1ca,
+    0 8px 14px rgba(120, 100, 115, .2);
+}
+
+.토글[aria-pressed="false"]:active { box-shadow: inset 0 2px 0 #ffffff, 0 1px 0 #cdc1ca; }
+
+/* 켜진 토글에는 체크 표시를 붙인다 */
+.토글[aria-pressed="true"]::after { content: " ✓"; }
+
+/* 한자가 없는 단어에서는 훈음 토글을 쓸 수 없다 */
+.토글:disabled {
+  background: linear-gradient(180deg, #fbfbfb, #ededed);
+  color: #bdb6bb;
+  text-shadow: none;
+  box-shadow: inset 0 1px 0 #ffffff, 0 3px 0 #dcd6da;
+  cursor: not-allowed;
+}
+
+.토글:disabled::before { display: none; }
+
+.학습줄 { display: flex; gap: 9px; }
+
+/* ── 완료 화면 ─────────────────────────────────────── */
+
+.완료화면 { text-align: center; padding: 6px 0 4px; }
+.완료이모지 { margin: 0; font-size: 2.1rem; }
+
+.완료제목 {
+  margin: 2px 0 20px;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--더진핑크);
+  text-shadow: 1px 1px 0 #ffffff, 2px 2px 0 var(--연핑크);
+}
+
+.완료쪽지 { margin-bottom: 18px; }
+.완료버튼줄 { display: flex; gap: 9px; }
+
+/* ── 상태 표시줄 ───────────────────────────────────── */
+
+.상태줄 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  background: linear-gradient(180deg, #ffffff, var(--연핑크));
+  border-top: 2px solid var(--핑크);
+  font-family: var(--또박손글씨);
+  font-size: .86rem;
+  font-weight: 700;
+  color: #a85d8a;
+}
+
+.상태구분 { color: var(--핑크); }
+
+/* ── 그 밖에 ───────────────────────────────────────── */
+
+.오류 {
+  margin: 14px 0 0;
+  padding: 11px 13px;
+  background: #fff0f0;
+  border: 2.5px solid #ff8a8a;
+  border-radius: 14px;
+  color: #b53a3a;
+  font-size: .9rem;
+  text-align: left;
+}
+
+.오류 code {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 1px 5px;
+  background: #ffffff;
+  border-radius: 6px;
+  font-size: .85rem;
+}
+
+.꼬리말 {
+  max-width: 460px;
+  margin: 14px auto 0;
+  position: relative;
+  z-index: 1;
+  font-size: .78rem;
+  color: #8a6a80;
+  text-align: center;
+}
+
+/* 넓은 화면에서는 글자를 살짝 키운다 */
+@media (min-width: 540px) {
+  body { padding-top: 26px; }
+  .한자 { font-size: 4rem; }
+  .제목줄제목 { font-size: 1.2rem; }
+}
+
+/* 애니메이션을 원하지 않는 사용자 설정을 존중한다 */
+@media (prefers-reduced-motion: reduce) {
+  .반짝이 { animation: none; }
+  .화면 { animation: none; }
+  .카드등장 { animation: none; }
+  .진행막대안 { transition: none; }
+}

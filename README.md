@@ -1,3 +1,14 @@
+# 연습 저장소
+
+웹 앱 두 개가 들어 있습니다.
+
+| | 주소 | 폴더 |
+|---|---|---|
+| 손글씨 숫자 인식기 | <https://ttotoori-collab.github.io/practice/> | `web_version/` · `desktop_version/` |
+| 일본어 단어장 (JLPT N5~N3) | <https://ttotoori-collab.github.io/practice/jlpt/> | [`jlpt_version/`](jlpt_version/) |
+
+---
+
 # 손글씨 숫자 인식기 (MNIST)
 
 마우스나 손가락으로 쓴 숫자를 인식하는 프로그램입니다.
@@ -46,8 +57,9 @@ python app.py
 ```
 ├── web_version/       순수 자바스크립트 웹 앱
 ├── desktop_version/   PyTorch + tkinter 데스크톱 앱 (학습 담당)
+├── jlpt_version/      일본어 단어장 (따로 도는 웹 앱)
 ├── docs/              설계 문서
-└── .github/workflows/ web_version 을 GitHub Pages 로 배포
+└── .github/workflows/ 두 웹 앱을 GitHub Pages 로 배포
 ```
 
 자세한 설명은 각 폴더의 README 를 보세요.
@@ -83,11 +95,15 @@ python app.py
 **모든 식별자와 주석이 한글입니다.** 파이썬 클래스·함수, PowerShell 변수,
 자바스크립트 함수·변수, CSS 클래스 이름까지 포함합니다.
 
-예외는 언어나 플랫폼이 한글을 받지 못하는 자리뿐입니다
-(배치 파일 전체, 표준 API 이름, GitHub Actions 의 `id`).
+예외는 언어나 플랫폼이 한글을 받지 못하는 자리와,
+사용자가 형식을 정해 준 `jlpt_version/데이터/words.json` 뿐입니다
+(그 밖에는 배치 파일 전체, 표준 API 이름, GitHub Actions 의 `id`).
 이유는 [CLAUDE.md](CLAUDE.md) 에 적어 두었습니다.
 
 ## GitHub Pages 배포
 
-`main` 브랜치의 `web_version/` 이 바뀌면 자동으로 배포됩니다.
+`main` 브랜치의 `web_version/` 이나 `jlpt_version/` 이 바뀌면 자동으로 배포됩니다.
 처음 한 번은 **Settings → Pages → Source** 를 `GitHub Actions` 로 지정해야 합니다.
+
+한 저장소에는 사이트가 하나뿐이라 두 앱을 주소로 나눠 올립니다.
+손글씨 인식기는 뿌리(`/`), 일본어 단어장은 `/jlpt/` 입니다.
