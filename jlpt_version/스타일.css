@@ -609,8 +609,8 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  /* 밤 모드의 뿔이 머리 위로 솟을 자리. 줄이면 뿔이 툴바를 덮는다. */
-  margin-top: 26px;
+  /* 밤 모드의 뿔이 머리 위로 솟을 자리. 줄이면 뿔 끝이 툴바 점선에 닿는다. */
+  margin-top: 34px;
   margin-bottom: 18px;
   text-align: left;
 }
@@ -621,18 +621,12 @@ body {
  */
 .리본강아지 {
   position: relative;
-  /* 92px 로 줄이고 오른쪽으로 14px 밀어, 왼쪽에 날개가 펼쳐질 자리를 만든다 */
+  /* 92px 로 줄이고 오른쪽으로 14px 밀어, 왼쪽에 밤 모드 날개가 펼쳐질 자리를 만든다 */
   flex: 0 0 92px;
   width: 92px;
   margin-left: 14px;
   line-height: 0;
   filter: drop-shadow(0 3px 3px rgba(120, 60, 100, .3));
-}
-
-.강아지사진 {
-  width: 100%;
-  height: auto;
-  filter: brightness(var(--사진밝기));
 }
 
 /* 목에 맨 나비넥타이. 턱 바로 아래 가슴털 자리다. 더 올리면 입에 문 것처럼 보인다. */
@@ -647,30 +641,31 @@ body {
 }
 
 /*
- * 악마 날개·꼬리·뿔. 밤에만 나온다. 그림 세 장(그림/악마*.png)이다.
- * 자리와 크기는 .리본강아지 에 대한 % 라서 사진 폭을 바꿔도 같이 따라간다.
- * 왼쪽으로 너무 내보내면 창 테두리에 잘린다. 사진 왼끝에서 13px 밖이 창 안쪽 끝이다.
+ * 낮·밤 강아지.
+ *
+ * 밤 그림(그림/악마강아지.png)은 뿔·날개·꼬리까지 들어 있어 낮 그림보다 크고,
+ * 그 안에서 강아지 몸이 차지하는 자리도 다르다. 그래서 화면에서 몸이 같은 자리·같은
+ * 크기로 보이도록 밤 그림에만 width·left·top 을 따로 준다.
+ * 숫자를 바꿀 때는 낮·밤을 번갈아 켜 보며 몸이 움직이지 않는지 확인한다.
+ *
+ * 낮 그림은 밤에도 자리를 차지해야(= display 가 아니라 visibility) 칸 높이가 안 흔들린다.
  */
-.악마장식 {
-  position: absolute;
-  display: none;
+.강아지사진 {
+  width: 100%;
   height: auto;
-  pointer-events: none;
-  filter: brightness(var(--사진밝기)) drop-shadow(0 2px 3px rgba(10, 5, 20, .5));
+  filter: brightness(var(--사진밝기));
 }
 
-:root.밤모드 .악마장식 { display: block; }
+.밤강아지 {
+  position: absolute;
+  display: none;
+  width: 158%;
+  left: -26%;
+  top: -34.4%;
+}
 
-/* 머리 위로 솟은 뿔. 사진 앞에 둔다. */
-.악마뿔 { top: -24%; left: 10%; width: 72%; z-index: 2; }
-
-/*
- * 날개와 꼬리는 사진 뒤(z-index: -1)에 깔아 몸에서 자라난 것처럼 보이게 한다.
- * 오른쪽은 말풍선이 덮으므로 말풍선 위(날개)나 아래(꼬리)로 비켜 둔다.
- * 왼쪽은 창 안쪽 끝까지 13px 뿐이라 -13% 가 한계다.
- */
-.악마날개 { top: -14%; left: -29%; width: 160%; z-index: -1; }
-.악마꼬리 { top: 66%; left: 80%; width: 42%; z-index: -1; }
+:root.밤모드 .낮강아지 { visibility: hidden; }
+:root.밤모드 .밤강아지 { display: block; }
 
 .인사말풍선 {
   flex: 1 1 auto;
