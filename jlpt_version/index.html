@@ -86,11 +86,15 @@
 
     <!-- 1번째 화면: 급수 선택 -->
     <section class="화면 급수화면" id="급수화면" aria-labelledby="급수제목">
-      <svg class="리본" viewBox="0 0 160 60" aria-hidden="true">
-        <path d="M80 34c-14-2-26-16-40-22-8-3-14 2-13 10 1 9 13 15 29 16-11 3-20 7-20 14 0 6 7 9 14 6 12-5 22-14 30-22z" fill="#ff8cc6" stroke="#e0397f" stroke-width="2.5"/>
-        <path d="M80 34c14-2 26-16 40-22 8-3 14 2 13 10-1 9-13 15-29 16 11 3 20 7 20 14 0 6-7 9-14 6-12-5-22-14-30-22z" fill="#ffa8d2" stroke="#e0397f" stroke-width="2.5"/>
-        <ellipse cx="80" cy="34" rx="11" ry="9" fill="#fff0f7" stroke="#e0397f" stroke-width="2.5"/>
-      </svg>
+      <!-- 리본을 머리에 얹은 강아지. 사진과 리본 모두 장식이라 낭독기에서는 숨긴다. -->
+      <div class="리본강아지" aria-hidden="true">
+        <img class="강아지사진" src="그림/리본강아지.png" alt="" width="400" height="518">
+        <svg class="리본" viewBox="0 0 160 60">
+          <path d="M80 34c-14-2-26-16-40-22-8-3-14 2-13 10 1 9 13 15 29 16-11 3-20 7-20 14 0 6 7 9 14 6 12-5 22-14 30-22z" fill="#ff8cc6" stroke="#e0397f" stroke-width="2.5"/>
+          <path d="M80 34c14-2 26-16 40-22 8-3 14 2 13 10-1 9-13 15-29 16 11 3 20 7 20 14 0 6-7 9-14 6-12-5-22-14-30-22z" fill="#ffa8d2" stroke="#e0397f" stroke-width="2.5"/>
+          <ellipse cx="80" cy="34" rx="11" ry="9" fill="#fff0f7" stroke="#e0397f" stroke-width="2.5"/>
+        </svg>
+      </div>
       <h2 class="급수제목" id="급수제목">급수를 골라 주세요</h2>
       <p class="작은안내">모르는 단어만 계속 돌아와요 💫</p>
       <div class="급수버튼줄" id="급수버튼줄">
@@ -107,7 +111,12 @@
         <p class="회차글" id="회차글">1회차 · 남은 카드 0장</p>
       </div>
 
-      <!-- 지브라 무늬 테두리 안에 스프링 다이어리 속지 -->
+      <!-- 지브라 무늬 테두리 안에 스프링 다이어리 속지.
+           모자 쓴 강아지가 속지 위로 얼굴을 내밀고 앞발을 걸친다. -->
+      <div class="메모장칸">
+        <img class="메모장강아지" src="그림/메모장강아지.png" alt="" aria-hidden="true" width="460" height="379">
+        <img class="강아지발 왼발" src="그림/강아지발.png" alt="" aria-hidden="true" width="150" height="153">
+        <img class="강아지발 오른발" src="그림/강아지발.png" alt="" aria-hidden="true" width="150" height="153">
       <div class="다이어리바깥">
         <article class="다이어리" id="다이어리">
           <div class="스프링" aria-hidden="true">
@@ -121,6 +130,7 @@
           <p class="말풍선 뜻 위꼬리" id="뜻" hidden></p>
           <p class="가나알림" id="가나알림" hidden>한자가 없는 단어예요</p>
         </article>
+      </div>
       </div>
 
       <!-- 보여 줄 것 켜고 끄기 -->
