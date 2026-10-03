@@ -462,7 +462,8 @@ body {
 
 /* 꼬리: 테두리색 삼각형 위에 흰 삼각형을 겹쳐 올린다 */
 .말풍선.아래꼬리::before, .말풍선.아래꼬리::after,
-.말풍선.위꼬리::before, .말풍선.위꼬리::after {
+.말풍선.위꼬리::before, .말풍선.위꼬리::after,
+.말풍선.왼꼬리::before, .말풍선.왼꼬리::after {
   content: "";
   position: absolute;
   left: 50%;
@@ -471,12 +472,25 @@ body {
 }
 
 /* 흰 삼각형(::after)을 2px 작게 겹쳐서 테두리색이 둘레로만 보이게 한다. */
-.말풍선.아래꼬리::after, .말풍선.위꼬리::after { border-width: 9px; }
+.말풍선.아래꼬리::after, .말풍선.위꼬리::after, .말풍선.왼꼬리::after { border-width: 9px; }
 
 .말풍선.아래꼬리::before { bottom: -21px; border-top-color: var(--핑크); }
 .말풍선.아래꼬리::after  { bottom: -17px; border-top-color: var(--말풍선바탕); }
 .말풍선.위꼬리::before   { top: -21px; border-bottom-color: var(--핑크); }
 .말풍선.위꼬리::after    { top: -17px; border-bottom-color: var(--말풍선바탕); }
+
+/* 왼쪽(강아지 쪽)을 가리키는 꼬리 */
+.말풍선.왼꼬리::before {
+  left: -21px; top: 50%;
+  transform: translateY(-50%);
+  border-right-color: var(--핑크);
+}
+
+.말풍선.왼꼬리::after {
+  left: -16px; top: 50%;
+  transform: translateY(-50%);
+  border-right-color: var(--말풍선바탕);
+}
 
 /* 창버튼·초기화 결과를 알리는 쪽지 */
 .쪽지 {
@@ -583,15 +597,27 @@ body {
 .급수화면 { text-align: center; }
 
 /*
- * 급수 화면의 강아지. 사진 위에 리본 SVG 를 겹쳐 머리에 얹은 것처럼 보이게 한다.
- * 리본 자리는 사진 크기에 대한 비율(%)로 잡아 두어서, 사진 폭만 바꾸면 같이 따라간다.
+ * 인사줄 — 왼쪽에 강아지, 오른쪽에 말풍선. 강아지가 말을 거는 모양이다.
+ * 좁은 폰 화면에서도 한 줄에 들어가야 해서 강아지 폭을 고정하고 말풍선이 남은 폭을 가진다.
+ */
+.인사줄 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+/*
+ * 강아지 사진은 흰 테두리를 두른 스티커다(그림/리본강아지.png).
+ * 리본 자리는 사진 크기에 대한 비율(%)이라 사진 폭만 바꾸면 같이 따라간다.
  */
 .리본강아지 {
   position: relative;
-  display: inline-block;
-  width: 134px;
-  margin-bottom: 2px;
+  flex: 0 0 104px;
+  width: 104px;
   line-height: 0;
+  filter: drop-shadow(0 3px 3px rgba(120, 60, 100, .3));
 }
 
 .강아지사진 {
@@ -600,25 +626,35 @@ body {
   filter: brightness(var(--사진밝기));
 }
 
+/* 목에 맨 나비넥타이. 턱 바로 아래 가슴털 자리다. 더 올리면 입에 문 것처럼 보인다. */
 .리본 {
   position: absolute;
-  left: 24%;
-  top: 1%;
-  width: 52%;
+  left: 27%;
+  top: 65%;
+  width: 46%;
   height: auto;
-  transform: rotate(-9deg);
+  transform: rotate(-4deg);
   filter: drop-shadow(0 2px 2px rgba(120, 60, 100, .35));
 }
 
+.인사말풍선 {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  padding: 11px 13px;
+  text-align: center;
+}
+
 .급수제목 {
-  margin: 0 0 2px;
-  font-size: 1.4rem;
+  margin: 0 0 4px;
+  font-size: 1.32rem;
   font-weight: 400;
   color: var(--핑크글자);
   text-shadow: var(--제목글자그림자);
 }
 
-.작은안내 { margin: 0 0 16px; font-size: .9rem; color: var(--보조글자); }
+.작은안내 { margin: 0; font-size: .78rem; line-height: 1.4; color: var(--보조글자); word-break: keep-all; }
 
 .급수버튼줄 { display: flex; flex-direction: column; gap: 13px; }
 
@@ -664,43 +700,6 @@ body {
 .회차글 { margin: 5px 0 0; font-size: .8rem; color: var(--보조글자); }
 
 /* ── 단어 카드 (스프링 다이어리 속지) ──────────────── */
-
-/*
- * 카드 위로 얼굴을 내민 모자 강아지와, 속지에 걸친 앞발.
- * 메모장칸 의 위쪽 여백이 얼굴이 올라앉을 자리다.
- * 얼굴은 속지의 위쪽 안쪽 여백(44px)까지만 내려오게 해서 글씨를 가리지 않는다.
- */
-.메모장칸 {
-  position: relative;
-  padding-top: 68px;   /* 얼굴이 내려앉을 자리. 줄이면 턱이 글자를 건드린다 */
-}
-
-.메모장강아지 {
-  position: absolute;
-  z-index: 3;
-  top: 0;
-  left: 50%;
-  width: 132px;
-  height: auto;
-  transform: translateX(-52%);
-  filter: brightness(var(--사진밝기)) drop-shadow(0 3px 4px rgba(120, 60, 100, .35));
-}
-
-/*
- * 앞발. 얼굴에서 충분히 떨어뜨려 놓는다. 너무 가까우면 귀처럼 보인다.
- * 위쪽 절반이 속지 테두리에 걸쳐서 "메모장을 잡은" 모양이 된다.
- */
-.강아지발 {
-  position: absolute;
-  z-index: 2;
-  top: 56px;
-  width: 48px;
-  height: auto;
-  filter: brightness(var(--사진밝기)) drop-shadow(0 2px 3px rgba(120, 60, 100, .3));
-}
-
-.강아지발.왼발 { left: calc(50% - 112px); transform: rotate(18deg); }
-.강아지발.오른발 { right: calc(50% - 112px); transform: scaleX(-1) rotate(18deg); }
 
 /* 지브라 무늬는 여기, 카드 바깥 테두리에만 얇게 둘린다. */
 .다이어리바깥 {
