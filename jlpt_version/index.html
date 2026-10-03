@@ -98,26 +98,33 @@
           </svg>
 
           <!--
-            밤 모드에서만 나오는 악마 뿔과 꼬리.
-            viewBox 는 사진 좌표(330x429)를 그대로 쓰되 위와 왼쪽에 여백을 둬서
-            뿔이 머리 위로, 꼬리가 몸 왼쪽으로 삐져나갈 수 있게 했다.
-            꼬리는 사진 뒤(z-index: -1), 뿔은 사진 앞에 그린다.
+            밤 모드에서만 나오는 악마 날개·꼬리·뿔. 사용자가 보내 준 그림이다.
+            날개와 꼬리는 사진 뒤(z-index: -1), 뿔은 사진 앞에 둔다.
+            자리와 크기는 모두 .리본강아지 에 대한 % 라서 사진 폭만 바꾸면 따라간다.
           -->
-          <svg class="악마장식 악마꼬리" viewBox="-60 -70 450 587">
-            <path d="M58 356 C18 380, -20 358, -26 320"
-                  fill="none" stroke="var(--악마테두리)" stroke-width="21" stroke-linecap="round"/>
-            <path d="M58 356 C18 380, -20 358, -26 320"
-                  fill="none" stroke="var(--악마색)" stroke-width="12" stroke-linecap="round"/>
-            <path d="M-23 332 L-58 280 L2 292 Z"
-                  fill="var(--악마색)" stroke="var(--악마테두리)" stroke-width="7" stroke-linejoin="round"/>
+          <!--
+            박쥐 날개. 받은 그림에 워터마크가 있어서 같은 느낌으로 직접 그렸다.
+            한쪽만 그리고 반대쪽은 use 로 좌우를 뒤집어 쓴다.
+            날개 뿌리를 가운데가 아니라 어깨(±36)에 두어야 몸에 가려지지 않는다.
+          -->
+          <svg class="악마장식 악마날개" viewBox="0 0 220 96">
+            <defs>
+              <g id="날개한쪽">
+                <path d="M0 80 C10 48, 36 14, 72 0
+                         C67 17, 63 29, 61 41
+                         C53 35, 46 39, 42 53
+                         C34 47, 26 53, 22 67
+                         C14 63, 6 72, 0 80 Z"
+                      fill="var(--악마색)" stroke="var(--악마테두리)" stroke-width="8" stroke-linejoin="round"/>
+                <path d="M0 80 L61 41 M0 80 L42 53 M0 80 L22 67"
+                      fill="none" stroke="var(--악마테두리)" stroke-width="7" stroke-linecap="round"/>
+              </g>
+            </defs>
+            <use href="#날개한쪽" transform="translate(146 8)"/>
+            <use href="#날개한쪽" transform="translate(74 8) scale(-1 1)"/>
           </svg>
-
-          <svg class="악마장식 악마뿔" viewBox="-60 -70 450 587">
-            <path d="M86 44 C78 12, 70 -12, 56 -40 C84 -18, 108 6, 120 36 Z"
-                  fill="var(--악마색)" stroke="var(--악마테두리)" stroke-width="7" stroke-linejoin="round"/>
-            <path d="M220 40 C228 8, 236 -16, 250 -44 C222 -22, 198 2, 186 32 Z"
-                  fill="var(--악마색)" stroke="var(--악마테두리)" stroke-width="7" stroke-linejoin="round"/>
-          </svg>
+          <img class="악마장식 악마꼬리" src="그림/악마꼬리.png" alt="" width="150" height="206">
+          <img class="악마장식 악마뿔" src="그림/악마뿔.png" alt="" width="260" height="179">
         </div>
 
         <div class="말풍선 인사말풍선 왼꼬리">
